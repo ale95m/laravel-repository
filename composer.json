@@ -1,0 +1,36 @@
+{
+    "name": "ale95m/easy",
+    "description": "API development package with laravel",
+    "authors": [
+        {
+            "name": "Alejandro Moreno",
+            "email": "44046329+ale95m@users.noreply.github.com"
+        }
+    ],
+    "license": "MIT",
+    "require": {
+        "php" : "^7.3|^8.0",
+        "laravel/passport": "^10.1",
+        "laraveles/spanish": "^1.5"
+    },
+    "require-dev": {
+        "phpunit/phpunit" :  "^9.3.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "ale95m\\easy\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ale95m\\easy\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "ale95m\\easy\\EasyServiceProvider"
+            ]
+        }
+    }
+}

@@ -20,7 +20,7 @@ class CreateLogsTable extends Migration
             $table->json('attributes');
             $table->json('changes');
             $table->ipAddress('ip');
-            $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->nullable();
             $table->unsignedBigInteger('logable_id')->nullable();
             $table->string('logable_type')->nullable();
             $table->timestamp('created_at')->useCurrent();

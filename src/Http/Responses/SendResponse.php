@@ -1,7 +1,7 @@
 <?php
 
 
-namespace ale95m\Easy\Http\Responses;
+namespace Easy\Http\Responses;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\Pagination\Paginator;

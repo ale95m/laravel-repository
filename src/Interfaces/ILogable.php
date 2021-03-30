@@ -1,6 +1,6 @@
 <?php
 
-namespace ale95m\Easy\Interfaces;
+namespace Easy\Interfaces;
 
 use Illuminate\Support\Collection;
 

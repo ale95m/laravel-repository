@@ -1,11 +1,11 @@
 <?php
 
 
-namespace ale95m\Easy\Traits;
+namespace Easy\Traits;
 
 
-use ale95m\Easy\Interfaces\ILogable;
-use ale95m\Easy\Models\Log;
+use Easy\Interfaces\ILogable;
+use Easy\Models\Log;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;

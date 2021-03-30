@@ -16,18 +16,18 @@
     },
     "autoload": {
         "psr-4": {
-            "ale95m\\easy\\": "src"
+            "Easy\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "ale95m\\easy\\": "tests"
+            "Easy\\": "tests/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "ale95m\\easy\\EasyServiceProvider"
+                "Easy\\EasyServiceProvider"
             ]
         }
     }

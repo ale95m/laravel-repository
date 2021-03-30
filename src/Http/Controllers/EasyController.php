@@ -1,9 +1,9 @@
 <?php
 
-namespace ale95m\Easy\Http\Controllers;
+namespace \Easy\Http\Controllers;
 
-use ale95m\Easy\Http\Requests\PaginateRequest;
-use ale95m\Easy\Http\Responses\SendResponse;
+use Easy\Http\Requests\PaginateRequest;
+use Easy\Http\Responses\SendResponse;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;

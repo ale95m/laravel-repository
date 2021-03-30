@@ -1,6 +1,6 @@
 <?php
 
-namespace ale95m\Easy;
+namespace Easy;
 
 use Illuminate\Support\ServiceProvider;
 

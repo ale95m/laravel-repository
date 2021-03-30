@@ -1,8 +1,8 @@
 <?php
 
-namespace ale95m\Easy\Repositories;
+namespace Easy\Repositories;
 
-use ale95m\Easy\Interfaces\ILogable;
+use Easy\Interfaces\ILogable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;

@@ -1,10 +1,9 @@
 <?php
-declare(strict_types=1);
 
-namespace ale95m\Easy\Http\Controllers;
+namespace Easy\Http\Controllers;
 
-use ale95m\Easy\Models\User;
-use ale95m\Easy\Responses\SendResponse;
+use Easy\Models\User;
+use Easy\Responses\SendResponse;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

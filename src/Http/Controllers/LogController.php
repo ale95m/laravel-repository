@@ -1,8 +1,8 @@
 <?php
 
-namespace ale95m\Easy\Http\Controllers;
+namespace Easy\Http\Controllers;
 
-use ale95m\Easy\Repositories\LogRepository;
+use Easy\Repositories\LogRepository;
 
 class LogController extends EasyController
 {

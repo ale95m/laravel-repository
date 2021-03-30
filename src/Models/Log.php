@@ -1,6 +1,6 @@
 <?php
 
-namespace ale95m\Easy\Models;
+namespace Easy\Models;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

@@ -1,6 +1,6 @@
 <?php
 
-use ale95m\Easy\Http\Controllers\AuthController;
+use Easy\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 

@@ -1,9 +1,9 @@
 <?php
 
 
-namespace ale95m\Easy\Repositories;
+namespace Easy\Repositories;
 
-use ale95m\Easy\Models\File;
+use Easy\Models\File;
 
 class FileRepository extends BaseRepository
 {

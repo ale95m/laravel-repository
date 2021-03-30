@@ -1,10 +1,10 @@
 <?php
 
-namespace ale95m\Easy\Models;
+namespace Easy\Models;
 
 
-use ale95m\Easy\Interfaces\ILogable;
-use ale95m\Easy\Traits\HasLogs;
+use Easy\Interfaces\ILogable;
+use Easy\Traits\HasLogs;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;

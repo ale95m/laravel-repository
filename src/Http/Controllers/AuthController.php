@@ -11,12 +11,17 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
-    public function login()
+    public function login(Request $request)
     {
         $user = new User();
         $password_field = $user->getAuthPasswordField();
         $auth_field = $user->getAuthField();
-        if (Auth::attempt([$auth_field => request($auth_field), $password_field => request($password_field)])) {//validar que el usuario existe en la bd
+        $request->validate([
+            $auth_field => 'required|string',
+            $password_field => 'required|string',
+        ]);
+        $credentials = request([$auth_field, $password_field]);
+        if (Auth::attempt($credentials)) {
             /** @var User $user */
             $user = Auth::user();
             $token = $user->getToken();

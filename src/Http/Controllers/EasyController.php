@@ -1,6 +1,6 @@
 <?php
 
-namespace \Easy\Http\Controllers;
+namespace Easy\Http\Controllers;
 
 use Easy\Http\Requests\PaginateRequest;
 use Easy\Http\Responses\SendResponse;

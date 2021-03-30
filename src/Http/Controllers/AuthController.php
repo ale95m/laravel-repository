@@ -3,7 +3,7 @@
 namespace Easy\Http\Controllers;
 
 use Easy\Models\User;
-use Easy\Responses\SendResponse;
+use Easy\Http\Responses\SendResponse;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

@@ -7,8 +7,8 @@ namespace Composer\Autoload;
 class ComposerStaticInitc646c8c60fe31670e83d88f37d14dc9b
 {
     public static $files = array (
-        '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         'ec07570ca5a812141189b1fa81503674' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Assert/Functions.php',
+        '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
     );
 
@@ -16,10 +16,6 @@ class ComposerStaticInitc646c8c60fe31670e83d88f37d14dc9b
         'p' => 
         array (
             'phpDocumentor\\Reflection\\' => 25,
-        ),
-        'a' => 
-        array (
-            'ale95m\\easy\\' => 12,
         ),
         'W' => 
         array (
@@ -34,6 +30,10 @@ class ComposerStaticInitc646c8c60fe31670e83d88f37d14dc9b
             'Prophecy\\' => 9,
             'PhpParser\\' => 10,
         ),
+        'E' => 
+        array (
+            'Easy\\' => 5,
+        ),
         'D' => 
         array (
             'Doctrine\\Instantiator\\' => 22,
@@ -45,13 +45,8 @@ class ComposerStaticInitc646c8c60fe31670e83d88f37d14dc9b
         'phpDocumentor\\Reflection\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
-            1 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
-            2 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
-        ),
-        'ale95m\\easy\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/src',
-            1 => __DIR__ . '/../..' . '/tests',
+            1 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+            2 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
         ),
         'Webmozart\\Assert\\' => 
         array (
@@ -68,6 +63,11 @@ class ComposerStaticInitc646c8c60fe31670e83d88f37d14dc9b
         'PhpParser\\' => 
         array (
             0 => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser',
+        ),
+        'Easy\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src',
+            1 => __DIR__ . '/../..' . '/tests',
         ),
         'Doctrine\\Instantiator\\' => 
         array (

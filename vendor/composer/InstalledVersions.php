@@ -30,7 +30,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => 'ffcd5382b61b839e0e02562124a66861481755f6',
+    'reference' => 'c045b1a75ae34106af700618e5feee29aaa57aa1',
     'name' => 'ale95m/easy',
   ),
   'versions' => 
@@ -42,7 +42,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => 'ffcd5382b61b839e0e02562124a66861481755f6',
+      'reference' => 'c045b1a75ae34106af700618e5feee29aaa57aa1',
     ),
     'doctrine/instantiator' => 
     array (

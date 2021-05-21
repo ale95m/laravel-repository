@@ -17,10 +17,11 @@ class LogRepository extends BaseRepository
 
     protected $filters = [
         'action:like',
-        'model:like',
+        'attributes:like',
+        'changes:like',
         'ip:like',
+        'model:like',
         'user_id',
-        'logable_id',
         'created_at:>',
         'created_at:<',
     ];
@@ -70,7 +71,7 @@ class LogRepository extends BaseRepository
     public static function createAction($model)
     {
         self::createLog('create', $model->getLogModel(),
-            $model->getLogData(true,false), null,
+            $model->getLogData(true, false), null,
             get_class($model),
             $model->getKey()
         );
@@ -83,7 +84,7 @@ class LogRepository extends BaseRepository
      */
     public static function updateAction($old_data, $model, bool $with_relations = true)
     {
-        $collection2 = $model->getLogData($with_relations,true);
+        $collection2 = $model->getLogData($with_relations, true);
         $old_values = $old_data->diff($collection2);
         $new_values = $collection2->diff($old_data);
 
@@ -100,7 +101,7 @@ class LogRepository extends BaseRepository
     public static function deleteAction($model)
     {
         self::createLog('delete', $model->getLogModel(),
-            $model->getLogData(true,false), null,
+            $model->getLogData(true, false), null,
             get_class($model),
             $model->getKey()
         );
@@ -112,13 +113,25 @@ class LogRepository extends BaseRepository
      */
     public function map($get)
     {
+        if (!is_subclass_of($get, \Illuminate\Database\Eloquent\Collection::class)) {
+            $get = collect($get);
+        }
         return $get->map(function ($item) {
 //            $model = $item['model'];
 //            if (!is_null($model)){
 //                $item['model'] = Translate::translateAttribute($model);
 //            }
             $item['attributes'] = json_decode($item['attributes']);
+            $item['changes'] = json_decode($item['changes']);
+
             return $item;
+        });
+    }
+
+    function searchByUserFullName($query, $value)
+    {
+        $query->whereHas('user', function ($relation_query) use ($value) {
+            $relation_query->where(DB::raw("CONCAT(name,' ',last_name)"), 'like', $value);
         });
     }
 }

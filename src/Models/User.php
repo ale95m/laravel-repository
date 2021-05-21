@@ -25,12 +25,12 @@ class User extends Authenticatable implements ILogable
     ];
     #endregion
 
-    #region Relations
-    public function roles()
-    {
-        return $this->belongsToMany(Role::class);
-    }
-    #endregion
+//    #region Relations
+//    public function roles()
+//    {
+//        return $this->belongsToMany(Role::class);
+//    }
+//    #endregion
 
     /**
      * The attributes that should be hidden for arrays.
@@ -60,14 +60,14 @@ class User extends Authenticatable implements ILogable
         return $this->token()->delete();
     }
 
-    /**
-     * @param string $role
-     * @return bool
-     */
-    public function hasRole(string $role): bool
-    {
-        return $this->roles()->where('name', $role)->exists();
-    }
+//    /**
+//     * @param string $role
+//     * @return bool
+//     */
+//    public function hasRole(string $role): bool
+//    {
+//        return $this->roles()->where('name', $role)->exists();
+//    }
 
     public function getAuthField()
     {

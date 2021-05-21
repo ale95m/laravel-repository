@@ -17,6 +17,7 @@ abstract class EasyController extends \Illuminate\Routing\Controller
     protected $repository;
     protected $uniqueFields = [];
     protected $per_page = 20;
+    protected $excel_export = null;
 
     /**
      * Display a listing of the resource.
@@ -46,8 +47,8 @@ abstract class EasyController extends \Illuminate\Routing\Controller
             foreach ($this->uniqueFields as $field) {
                 $last_check = $field;
                 $request->validate([$field => Rule::unique($this->repository->getModel()->getTable())
-                    ->where(function ($query) use ($field) {
-                        return $this->uniqueConditions($query, $field);
+                    ->where(function ($query) use ($field, $request) {
+                        return $this->uniqueConditions($query, $field, $request->all());
                     })]);
             }
             return SendResponse::successData($this->repository->create($request->all()));
@@ -68,7 +69,7 @@ abstract class EasyController extends \Illuminate\Routing\Controller
      */
     public function Show($model)
     {
-        return SendResponse::successData($this->getModel($model));
+        return SendResponse::successData($this->getModel($model, false));
     }
 
     /**
@@ -85,8 +86,8 @@ abstract class EasyController extends \Illuminate\Routing\Controller
             foreach ($this->uniqueFields as $field) {
                 $last_check = $field;
                 $request->validate([$field => Rule::unique($this->repository->getModel()->getTable())
-                    ->where(function ($query) use ($field) {
-                        return $this->uniqueConditions($query, $field);
+                    ->where(function ($query) use ($field, $request) {
+                        return $this->uniqueConditions($query, $field, $request->all());
                     })->ignore($model)]);
             }
             return SendResponse::successData($this->repository->update($model, $request->all()));
@@ -113,18 +114,22 @@ abstract class EasyController extends \Illuminate\Routing\Controller
         } catch (\Exception $e) {
             return SendResponse::error($e->getMessage());
         }
-
     }
 
-    public function getLogs(Request $request, $id)
+    public function getLogs(PaginateRequest $request, $id)
     {
         $model = $this->getModel($id);
+        $per_page = $request['itemsPerPage'] ?? 20;
+        $current_page = $request['page'] ?? 1;
         try {
-            return SendResponse::successData($this->repository->getLogs($model, $request->all()));
+            $logRepository = new LogRepository();
+            $paginator = $this->repository->getLogs($model, $request->all())
+                ->paginate($per_page, ['*'], 'page', $current_page);
+            $logs = $logRepository->map($paginator->items());
+            return SendResponse::successLogsPagination($paginator, $logs);
         } catch (\Exception $e) {
             return SendResponse::error($e->getMessage());
         }
-
     }
 
     public function paginate(PaginateRequest $request)
@@ -149,23 +154,25 @@ abstract class EasyController extends \Illuminate\Routing\Controller
 
     /**
      * @param $id
+     * @param bool $clean
      * @return Model
      */
-    private function getModel($id)
+    private function getModel($id, $clean = true)
     {
         if (is_numeric($id)) {
-            return $this->repository->findOrFail($id);
+            return $this->repository->findOrFail($id, $clean);
         } else {
-            throw new ModelNotFoundException(trans('exceptions.not_found.model'));
+            throw new ModelNotFoundException("Not found");
         }
     }
 
     /**
      * @param Builder $query
      * @param $field
+     * @param array $data
      * @return Builder
      */
-    protected function uniqueConditions($query, $field)
+    protected function uniqueConditions($query, $field, array $data)
     {
         return $query->whereNotNull($field);
     }

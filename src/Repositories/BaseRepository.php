@@ -12,6 +12,7 @@ use Illuminate\Support\Str;
 abstract class BaseRepository
 {
     protected $filters = [];
+    protected $select_fields = ['*'];
     protected $sortable_fields = [];
     protected $orderBy = null;
     protected $orderByAsc = true;
@@ -35,7 +36,7 @@ abstract class BaseRepository
     function search(array $data = array(), ?Builder $query = null)
     {
         if (is_null($query)) {
-            $query = $this->getModel();
+            $query = $this->getModel()->select($this->select_fields);
         }
         $this->loadRelations($query, $data);
         $this->loadDeletes($query, $data);
@@ -62,20 +63,36 @@ abstract class BaseRepository
      * @param array $data
      * @param bool $log
      * @return ILogable|Model
+     * @throws \Exception
      */
     function update(Model $model, array $data, $log = true)
     {
+        return $this->baseUpdate($model, $data, $log, true);
+    }
+
+    private function baseUpdate(Model $model, array $data, $log = true, bool $helpers = true)
+    {
         $log = is_subclass_of($model, ILogable::class) && $log;
         $old_values = $log ? $model->getLogData(true, true) : null;
-        $this->updating($model, $data);
+        if ($helpers) {
+            $this->updating($model, $data);
+        }
         $model->update($data);
-        $this->updated($model, $data);
+        if ($helpers) {
+            $this->updated($model, $data);
+        }
         if ($log) {
             /** @var ILogable $old_model */
             LogRepository::updateAction($old_values, $model->refresh());
         }
         return $model;
     }
+
+    public function updateWithoutHelpers(Model $model, array $data, $log = true)
+    {
+        return $this->baseUpdate($model, $data, $log, false);
+    }
+
 
     /**
      * @param Model|int $model
@@ -91,7 +108,7 @@ abstract class BaseRepository
         /** @var Model $model */
         foreach ($this->checkDelete as $relation) {
             if ($model->load($relation)->$relation()->exists()) {//TODO: probar sin el load()
-                throw new \Exception('modelo relacionado');
+                throw new \Exception(trans('message.exceptions.can_not'));
             }
         }
         $this->deleting($model);
@@ -105,11 +122,17 @@ abstract class BaseRepository
 
     /**
      * @param int $id
+     * @param bool $clean
      * @return Model
      */
-    function findOrFail(int $id)
+    function findOrFail($id, bool $clean = true)
     {
-        return $this->getModel()->findOrFail($id);
+        if ($clean) {
+            return $this->getModel()->findOrFail($id);
+        } else {
+            return $this->search()->where('id', $id)->firstOrFail();
+        }
+
     }
 
 
@@ -149,11 +172,19 @@ abstract class BaseRepository
 
     private function applyOrderBy(&$query, array $data)
     {
-        $orderBy = $data['sort_by'] ?? $this->orderBy;
-        $orderByAsc = $data['sort_asc'] ?? $this->orderByAsc;
-        if (in_array($orderBy, $this->sortable_fields)) {
-            $query->orderBy($orderBy, $orderByAsc ? 'asc' : 'desc');
+        $orderBy = $data['sort_by'] ?? null;
+        if (!is_null($orderBy)) {
+            if (!in_array($orderBy, $this->sortable_fields)) {
+                return;
+            }
+        } elseif (is_null($this->orderBy)) {
+            return;
+        } else {
+            $orderBy = $this->orderBy;
         }
+        $orderByAsc = $data['sort_asc'] ?? $this->orderByAsc;
+        $query->orderBy($orderBy, $orderByAsc ? 'asc' : 'desc');
+
     }
 
     private function applyFilters(&$query, array $data)
@@ -228,27 +259,27 @@ abstract class BaseRepository
     #region Login
     public function getLogs($model, array $data)
     {
-        if (is_subclass_of($model, ILogable::class)) {
-            /** @var ILogable $model */
-            $logRepository = new LogRepository();
-            $query = $model->logs()->getQuery();
-            foreach ($model->getLogableRelations() as $relation) {
-                $external_logs = $model->$relation;
-                if (is_countable($external_logs)) {
-                    foreach ($external_logs as $external_log) {
-                        if (is_subclass_of($external_log, ILogable::class)) {
-                            $query->union($external_log->logs()->newQuery());
-                        }
-                    }
-                } else {
-                    if (is_subclass_of($external_logs, ILogable::class)) {
-                        $query->union($external_logs->logs()->newQuery());
+        if (!is_subclass_of($model, ILogable::class)) {
+            throw new NotFoundHttpException();
+        }
+        /** @var ILogable $model */
+        $logRepository = new LogRepository();
+        $query = $model->logs()->getQuery();
+        foreach ($model->getLogableRelations() as $relation) {
+            $external_logs = $model->$relation;
+            if (is_countable($external_logs)) {
+                foreach ($external_logs as $external_log) {
+                    if (is_subclass_of($external_log, ILogable::class)) {
+                        $query->union($external_log->logs()->newQuery());
                     }
                 }
+            } else {
+                if (is_subclass_of($external_logs, ILogable::class)) {
+                    $query->union($external_logs->logs()->newQuery());
+                }
             }
-            return $logRepository->map($logRepository->search($data, $query)->get());
         }
-        return [];
+        return $logRepository->search($data, $query);
     }
     #endregion
 
@@ -260,6 +291,7 @@ abstract class BaseRepository
      */
     protected function creating(array &$data): void
     {
+
     }
 
     /**
@@ -312,3 +344,4 @@ abstract class BaseRepository
 
     #endregion
 }
+

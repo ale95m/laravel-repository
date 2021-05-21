@@ -9,6 +9,7 @@ use Illuminate\Http\JsonResponse;
 
 class SendResponse
 {
+
     /**
      * @param string $message
      * @return JsonResponse
@@ -71,8 +72,25 @@ class SendResponse
         return self::successData([
             'current' => $pagination->items(),
             'pagination' => [
-                'per_page' => $pagination->perPage(),
-                'current_page' => $pagination->currentPage(),
+                'itemsPerPage' => $pagination->perPage(),
+                'page' => $pagination->currentPage(),
+            ]
+        ], $message);
+    }
+
+    public static function successLogsPagination(LengthAwarePaginator $pagination,$logs, string $message = 'OK'): JsonResponse
+    {
+        return self::successData([
+            'current' => $logs,
+            'pagination' => [
+//                'total' => $pagination->total(),
+//                'per_page' => $pagination->perPage(),
+//                'current_page' => $pagination->currentPage(),
+//                'last_page' => $pagination->lastPage()
+                'itemsLength' => $pagination->total(),
+                'itemsPerPage' => $pagination->perPage(),
+                'page' => $pagination->currentPage(),
+                'pageCount' => $pagination->lastPage()
             ]
         ], $message);
     }

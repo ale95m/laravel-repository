@@ -13,7 +13,8 @@ class AuthController extends Controller
 {
     public function login(Request $request)
     {
-        $user = new config('easy.user_model');
+        $user_model = config('easy.user_model');
+        $user = new $user_model();
         $password_field = $user->getAuthPasswordField();
         $auth_field = $user->getAuthField();
         $request->validate([

@@ -17,7 +17,6 @@ class EasyServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(__DIR__ . '/../Database/migrations');
         $this->mergeConfigFrom(__DIR__ . '/../config/config.php', 'easy');
         $this->registerRoutes();
-
     }
 
     /**

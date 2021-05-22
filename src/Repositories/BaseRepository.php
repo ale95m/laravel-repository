@@ -21,6 +21,7 @@ abstract class BaseRepository
     protected $allow_load_deleted = false;
     protected $split_operator = ':';
     protected $split_relation = '->';
+    protected $use_uuid = false;
 
     /**
      * @return Model
@@ -49,7 +50,12 @@ abstract class BaseRepository
     function create(array $data, $log = true)
     {
         $this->creating($data);
-        $model = $this->getModel()->create($data);
+        $model = $this->getModel()->fill($data);
+        if ($this->use_uuid){
+            $key = $model->getKeyName();
+            $model->$key = Str::uuid();
+        }
+        $model->save();
         $this->created($model, $data);
         if (is_subclass_of($model, ILogable::class) && $log) {
             LogRepository::createAction($model);

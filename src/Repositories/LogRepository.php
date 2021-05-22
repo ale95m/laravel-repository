@@ -41,7 +41,7 @@ class LogRepository extends BaseRepository
             $user_id = Auth::id();
         }
 
-        $ip = $_SERVER['REMOTE_ADDR'];
+        $ip =  $_SERVER['REMOTE_ADDR'] ?? 'localhost';
         Log::create
         ([
             'user_id' => $user_id,

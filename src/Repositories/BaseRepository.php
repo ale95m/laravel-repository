@@ -114,7 +114,7 @@ abstract class BaseRepository
         /** @var Model $model */
         foreach ($this->checkDelete as $relation) {
             if ($model->load($relation)->$relation()->exists()) {//TODO: probar sin el load()
-                throw new \Exception(trans('message.exceptions.can_not'));
+                throw new \Exception(trans('easy::exceptions.can_not'));
             }
         }
         $this->deleting($model);

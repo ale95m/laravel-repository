@@ -14,33 +14,14 @@ class File extends Model
     use HasFactory;
 
     const Image = 'Image';
-    const Base64Image = 'Base64Image';
-    const Doc = 'Doc';
-    const File = 'File';
+    const TEXT = 'Text';
+    const FILE = 'File';
 
     protected $fillable = [
         'path',
-        'type'
+        'type',
+        'is_text'
     ];
 
-    /**
-     * @param string $type
-     * @return string
-     */
-    public static function getDirectory(string $type)
-    {
-        switch ($type) {
-            case 'Image':
-            case 'Base64Image':
-            {
-                return 'images/';
-            }
-            case 'Doc':
-            {
-                return 'docs/';
-            }
-            default:
-                return 'files/';
-        }
-    }
+
 }

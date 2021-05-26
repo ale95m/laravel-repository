@@ -2,6 +2,7 @@
 
 namespace Easy\Http\Controllers;
 
+use Easy\Helpers\Translate;
 use Easy\Http\Requests\PaginateRequest;
 use Easy\Http\Responses\SendResponse;
 use Illuminate\Database\Eloquent\Builder;
@@ -53,9 +54,7 @@ abstract class EasyController extends \Illuminate\Routing\Controller
             }
             return SendResponse::successData($this->repository->create($request->all()));
         } catch (ValidationException $e) {
-            $translate_route = 'validation.attributes.' . $last_check;
-            $attribute_name = trans($translate_route);
-            return SendResponse::error(trans('validation.unique', ['attribute' => $attribute_name != $translate_route ? $attribute_name : $last_check]));
+            return SendResponse::error(trans('validation.unique', ['attribute' => Translate::translateAttribute($last_check)]));
         } catch (\Exception $e) {
             return SendResponse::error($e->getMessage());
         }
@@ -92,9 +91,7 @@ abstract class EasyController extends \Illuminate\Routing\Controller
             }
             return SendResponse::successData($this->repository->update($model, $request->all()));
         } catch (ValidationException $e) {
-            $translate_route = 'validation.attributes.' . $last_check;
-            $attribute_name = trans($translate_route);
-            return SendResponse::error(trans('validation.unique', ['attribute' => $attribute_name != $translate_route ? $attribute_name : $last_check]));
+            return SendResponse::error(trans('validation.unique', ['attribute' => Translate::translateAttribute($last_check)]));
         } catch (\Exception $e) {
             return SendResponse::error($e->getMessage());
         }

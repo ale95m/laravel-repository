@@ -1,6 +1,7 @@
 <?php
 
 use Easy\Http\Controllers\AuthController;
+use Easy\Http\Controllers\FileController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
@@ -12,4 +13,8 @@ Route::prefix('auth')->group(function () {
         })->name('auth.user');
         Route::get('logout', [AuthController::class, 'logout']);
     });
+});
+
+Route::prefix(['middleware' => config('easy.get_file_middleware')])->group(function () {
+    Route::get( (config('easy.get_file_prefix')).'/{file}', [FileController::class, 'get'])->name('easy.getFile');
 });

@@ -17,12 +17,6 @@ use Illuminate\Support\Str;
 trait HasLogs
 {
 
-    public function getLogModel(): string
-    {
-        $class_name = strtolower(class_basename(get_called_class()));
-        return /*ucfirst(trans("models.*/ $class_name/*.name"))*/ ;
-    }
-
     function getLogableAttributes(): array
     {
         return $this->logableAttributes ?? [];

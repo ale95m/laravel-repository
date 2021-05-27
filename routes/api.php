@@ -11,7 +11,7 @@ if (config('easy.use_auth')) {
         Route::post('login', [AuthController::class, 'login'])->name('auth.login');
         Route::middleware(['auth:api'])->group(function () {
             Route::get('user', function (Request $request) {
-                return $request->user();
+                return $request->user()->load(config('easy.auth_user_relations'));
             })->name('auth.user');
             Route::get('logout', [AuthController::class, 'logout'])->name('auth.logout');
         });

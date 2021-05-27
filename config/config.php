@@ -9,4 +9,5 @@ return [
     'get_file_middleware' => [],
     'get_file_prefix' => 'files',
     'email_verification' => false,
+    'auth_user_relations' => []
 ];

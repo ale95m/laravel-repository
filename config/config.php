@@ -7,5 +7,6 @@ return [
     'file_path' => 'files',
     'disk' => 'local',
     'get_file_middleware' => [],
-    'get_file_prefix' => 'files'
+    'get_file_prefix' => 'files',
+    'email_verification' => false,
 ];

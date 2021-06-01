@@ -3,6 +3,7 @@
 
 namespace Easy\Repositories;
 
+use Easy\Exceptions\EasyException;
 use Easy\Models\File;
 use Illuminate\Support\Facades\Storage;
 
@@ -16,8 +17,7 @@ class FileRepository extends BaseRepository
     {
         return new File();
     }
-
-
+    
     private function save($file, ?string $type, string $directory, bool $is_text = false, bool $base64Encode = false)
     {
         $directory = $this->getBasePath($directory);
@@ -54,8 +54,8 @@ class FileRepository extends BaseRepository
 
     public function getFile(File $file)
     {
-        if (!Storage::disk($this->getDisk())->exists($file->path)){
-            throw new \Exception(trans('easy::exeptions.not_found.file'));
+        if (!Storage::disk($this->getDisk())->exists($file->path)) {
+            EasyException::throwException(trans('easy::exeptions.not_found.file'));
         }
         return Storage::disk($this->getDisk())->get($file->path);
     }
@@ -83,29 +83,25 @@ class FileRepository extends BaseRepository
         return $base_path . $directory;
     }
 
-    public
-    function delete($model, $log = true)
+    public function delete($model, $log = true)
     {
         if (is_numeric($model)) {
             $model = $this->findOrFail($model);
         }
         /** @var File $model */
-        $path = storage_path($model->path);
-        if (file_exists($path)) {
-            unlink($path);
+        if (Storage::disk($this->getDisk())->exists($file->path)) {
+            Storage::disk($this->getDisk())->delete($file->path);
         }
         return parent::delete($model, $log);
     }
 
-    public
-    function base64ToImage(string $base64)
+    public function base64ToImage(string $base64)
     {
         $data = explode(',', $base64);
         return base64_decode($data[1]);
     }
 
-    private
-    function getUniqueName(string $store_path, $file_name)
+    private function getUniqueName(string $store_path, $file_name)
     {
         if (file_exists($store_path . $file_name)) {
             return $this->getUniqueName($store_path, $file_name . random_int(1, 9));

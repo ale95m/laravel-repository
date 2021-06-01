@@ -2,6 +2,7 @@
 
 namespace Easy\Http\Controllers;
 
+use Easy\Exceptions\EasyException;
 use Easy\Helpers\Translate;
 use Easy\Http\Requests\PaginateRequest;
 use Easy\Http\Responses\SendResponse;
@@ -30,8 +31,14 @@ abstract class EasyController extends \Illuminate\Routing\Controller
     {
         try {
             return SendResponse::successData($this->repository->search($request->all())->get());
-        } catch (\Exception $e) {
+        }  catch (EasyException $e) {
             return SendResponse::error($e->getMessage());
+        } catch (\Exception $e) {
+            if (env('APP_DEBUG', false)) {
+                return SendResponse::error($e->getMessage());
+            } else {
+                abort(500);
+            }
         }
     }
 
@@ -55,8 +62,14 @@ abstract class EasyController extends \Illuminate\Routing\Controller
             return SendResponse::successData($this->repository->create($request->all()));
         } catch (ValidationException $e) {
             return SendResponse::error(trans('validation.unique', ['attribute' => Translate::translateAttribute($last_check)]));
-        } catch (\Exception $e) {
+        }  catch (EasyException $e) {
             return SendResponse::error($e->getMessage());
+        } catch (\Exception $e) {
+            if (env('APP_DEBUG', false)) {
+                return SendResponse::error($e->getMessage());
+            } else {
+                abort(500);
+            }
         }
     }
 
@@ -92,8 +105,14 @@ abstract class EasyController extends \Illuminate\Routing\Controller
             return SendResponse::successData($this->repository->update($model, $request->all()));
         } catch (ValidationException $e) {
             return SendResponse::error(trans('validation.unique', ['attribute' => Translate::translateAttribute($last_check)]));
-        } catch (\Exception $e) {
+        } catch (EasyException $e) {
             return SendResponse::error($e->getMessage());
+        } catch (\Exception $e) {
+            if (env('APP_DEBUG', false)) {
+                return SendResponse::error($e->getMessage());
+            } else {
+                abort(500);
+            }
         }
     }
 
@@ -108,8 +127,14 @@ abstract class EasyController extends \Illuminate\Routing\Controller
         $model = $this->getModel($id);
         try {
             return SendResponse::successData($this->repository->delete($model));
-        } catch (\Exception $e) {
+        }  catch (EasyException $e) {
             return SendResponse::error($e->getMessage());
+        } catch (\Exception $e) {
+            if (env('APP_DEBUG', false)) {
+                return SendResponse::error($e->getMessage());
+            } else {
+                abort(500);
+            }
         }
     }
 
@@ -124,8 +149,14 @@ abstract class EasyController extends \Illuminate\Routing\Controller
                 ->paginate($per_page, ['*'], 'page', $current_page);
             $logs = $logRepository->map($paginator->items());
             return SendResponse::successLogsPagination($paginator, $logs);
-        } catch (\Exception $e) {
+        }  catch (EasyException $e) {
             return SendResponse::error($e->getMessage());
+        } catch (\Exception $e) {
+            if (env('APP_DEBUG', false)) {
+                return SendResponse::error($e->getMessage());
+            } else {
+                abort(500);
+            }
         }
     }
 
@@ -144,8 +175,14 @@ abstract class EasyController extends \Illuminate\Routing\Controller
                 : SendResponse::successPagination(
                     $search->paginate($per_page, ['*'], 'page', $current_page)
                 );
-        } catch (\Exception $e) {
+        }  catch (EasyException $e) {
             return SendResponse::error($e->getMessage());
+        } catch (\Exception $e) {
+            if (env('APP_DEBUG', false)) {
+                return SendResponse::error($e->getMessage());
+            } else {
+                abort(500);
+            }
         }
     }
 

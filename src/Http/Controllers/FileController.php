@@ -23,7 +23,8 @@ class FileController extends EasyController
             if ($file->type == File::TEXT) {
                 return SendResponse::successData($this->repository->getContent($file));
             } else {
-                return response()->download($this->repository->getFile($file));
+                return Storage::download($file->path);
+//                return response()->download($this->repository->getFile($file));
             }
         } else {
             throw new \Exception(trans('easy::exeptions.not_found.file'));

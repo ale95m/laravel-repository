@@ -15,10 +15,11 @@ class FileController extends EasyController
     public function __construct(FileRepository $fileRepository)
     {
         $this->repository = $fileRepository;
-     }
+    }
 
-    public function get(Request $request, File $file)
+    public function get(Request $request, $file)
     {
+        $file= File::find($file);
         if (Storage::exists($file->path)) {
             if ($file->type == File::TEXT) {
                 return SendResponse::successData($this->repository->getContent($file));

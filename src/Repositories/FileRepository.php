@@ -89,8 +89,8 @@ class FileRepository extends BaseRepository
             $model = $this->findOrFail($model);
         }
         /** @var File $model */
-        if (Storage::disk($this->getDisk())->exists($file->path)) {
-            Storage::disk($this->getDisk())->delete($file->path);
+        if (Storage::disk($this->getDisk())->exists($model->path)) {
+            Storage::disk($this->getDisk())->delete($model->path);
         }
         return parent::delete($model, $log);
     }

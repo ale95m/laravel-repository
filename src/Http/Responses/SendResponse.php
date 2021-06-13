@@ -46,7 +46,7 @@ class SendResponse
         return response()->json([
             'status' => 'success',
             'message' => $message,
-            'data' => json_encode($data)
+            'data' => config('easy.json_numeric_check') ? json_encode($data, JSON_NUMERIC_CHECK) : json_encode($data)
         ]);
     }
 
@@ -78,7 +78,7 @@ class SendResponse
         ], $message);
     }
 
-    public static function successLogsPagination(LengthAwarePaginator $pagination,$logs, string $message = 'OK'): JsonResponse
+    public static function successLogsPagination(LengthAwarePaginator $pagination, $logs, string $message = 'OK'): JsonResponse
     {
         return self::successData([
             'current' => $logs,

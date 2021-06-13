@@ -11,7 +11,10 @@ if (config('easy.use_auth')) {
         Route::post('login', [AuthController::class, 'login'])->name('auth.login');
         Route::middleware(['auth:api'])->group(function () {
             Route::get('user', function (Request $request) {
-                return $request->user()->load(config('easy.auth_user_relations'));
+                $user = $request->user()->load(config('easy.auth_user_relations'));
+                return config('easy.json_numeric_check')
+                    ? json_encode($user, JSON_NUMERIC_CHECK)
+                    : json_encode($user);
             })->name('auth.user');
             Route::get('logout', [AuthController::class, 'logout'])->name('auth.logout');
         });

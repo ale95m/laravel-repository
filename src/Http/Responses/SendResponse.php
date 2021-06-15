@@ -50,10 +50,11 @@ class SendResponse
         ]);
     }
 
-    public static function successPagination(LengthAwarePaginator $pagination, string $message = 'OK'): JsonResponse
+    public static function successPagination(LengthAwarePaginator $pagination, $totals = null, string $message = 'OK'): JsonResponse
     {
         return self::successData([
             'current' => $pagination->items(),
+            'totals' => $totals,
             'pagination' => [
 //                'total' => $pagination->total(),
 //                'per_page' => $pagination->perPage(),

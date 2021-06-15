@@ -15,7 +15,7 @@ class LogRepository extends BaseRepository
         'user'
     ];
 
-    protected $filters = [
+    protected array $filters = [
         'action:like',
         'attributes:like',
         'changes:like',

@@ -11,17 +11,18 @@ use Illuminate\Support\Str;
 
 abstract class BaseRepository
 {
-    protected $filters = [];
-    protected $select_fields = ['*'];
-    protected $sortable_fields = [];
-    protected $orderBy = null;
-    protected $orderByAsc = true;
-    protected $relationships = null;
-    protected $checkDelete = [];
-    protected $allow_load_deleted = false;
-    protected $split_operator = ':';
-    protected $split_relation = '->';
-    protected $use_uuid = false;
+    protected array $filters = [];
+    protected array $select_fields = ['*'];
+    protected array $sortable_fields = [];
+    protected ?string $orderBy = null;
+    protected bool $orderByAsc = true;
+    protected ?array $relationships = null;
+    protected array $checkDelete = [];
+    protected bool $allow_load_deleted = false;
+    protected string $split_operator = ':';
+    protected string $split_relation = '->';
+    protected bool $use_uuid = false;
+    protected bool $with_totals = false;
 
     /**
      * @return Model
@@ -51,7 +52,7 @@ abstract class BaseRepository
     {
         $this->creating($data);
         $model = $this->getModel()->fill($data);
-        if ($this->use_uuid){
+        if ($this->use_uuid) {
             $key = $model->getKeyName();
             $model->$key = Str::uuid();
         }
@@ -260,7 +261,7 @@ abstract class BaseRepository
             }
         }
     }
-#endregion
+    #endregion
 
     #region Login
     public function getLogs($model, array $data)
@@ -349,5 +350,19 @@ abstract class BaseRepository
     }
 
     #endregion
+    public function getWithTotals(): bool
+    {
+        return $this->with_totals;
+    }
+
+    public function setWithTotals(bool $with_totals)
+    {
+        $this->with_totals = $with_totals;
+    }
+
+    protected function getTotals(Builder $query)
+    {
+        throw new \Exception(trans('easy::exceptions.not_implemented', ['name' => 'function getTotals']));
+    }
 }
 

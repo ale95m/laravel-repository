@@ -2,6 +2,7 @@
 
 namespace Easy\Http\Controllers;
 
+use Easy\Exceptions\EasyException;
 use Easy\Http\Responses\SendResponse;
 use Easy\Models\File;
 use Easy\Repositories\FileRepository;
@@ -17,18 +18,21 @@ class FileController extends EasyController
         $this->repository = $fileRepository;
     }
 
-    public function get(Request $request, $file)
+    public function get(Request $request, $file, ?string $type = null)
     {
-        $file= File::find($file);
+        $query = File::query();
+        if (!is_null($type)) {
+            $query->where('type', $type);
+        }
+        $file = $query->find($file);
         if (Storage::exists($file->path)) {
             if ($file->type == File::TEXT) {
                 return SendResponse::successData($this->repository->getContent($file));
             } else {
                 return Storage::download($file->path);
-//                return response()->download($this->repository->getFile($file));
             }
         } else {
-            throw new \Exception(trans('easy::exeptions.not_found.file'));
+            EasyException::throwException(trans('easy::exeptions.not_found.file'));
         }
     }
 }

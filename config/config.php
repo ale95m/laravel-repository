@@ -6,6 +6,7 @@ return [
     'api_middleware' => [],
     'file_path' => 'files',
     'disk' => 'local',
+    'use_file_routes' => false,
     'get_file_middleware' => [],
     'get_file_prefix' => 'files',
     'email_verification' => false,

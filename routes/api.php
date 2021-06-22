@@ -26,7 +26,8 @@ if (config('easy.use_auth')) {
         });
     }
 }
-
-Route::group(['middleware' => config('easy.get_file_middleware')], function () {
-    Route::get((config('easy.get_file_prefix')) . '/{file}', [FileController::class, 'get'])->name('easy.getFile');
-});
+if (config('easy.use_file_routes')) {
+    Route::group(['middleware' => config('easy.get_file_middleware')], function () {
+        Route::get((config('easy.get_file_prefix')) . '/{file}', [FileController::class, 'get',])->name('easy.getFile');
+    });
+}

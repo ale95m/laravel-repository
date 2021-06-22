@@ -6,5 +6,6 @@ return [
         'file' => 'No se ha podido encontrar el archivo.',
         'url' => 'No se ha podido encontrar la dirección.',
     ],
-    'can_not' => 'No es posible realizar esta acción.'
+    'can_not' => 'No es posible realizar esta acción.',
+    'not_implemented' => ':name is not implemented'
 ];

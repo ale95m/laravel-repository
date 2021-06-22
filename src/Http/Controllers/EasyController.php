@@ -30,8 +30,16 @@ abstract class EasyController extends \Illuminate\Routing\Controller
     public function index(Request $request)
     {
         try {
-            return SendResponse::successData($this->repository->search($request->all())->get());
-        }  catch (EasyException $e) {
+            $query = $this->repository->search($request->all());
+            if ($this->repository->getWithTotals()) {
+                $clone = clone $query;
+                return SendResponse::successData([
+                    'current' => $query->get(),
+                    'totals' => $this->repository->getTotals($clone)
+                ]);
+            }
+            return SendResponse::successData($query->get());
+        } catch (EasyException $e) {
             return SendResponse::error($e->getMessage());
         } catch (\Exception $e) {
             if (env('APP_DEBUG', false)) {
@@ -62,7 +70,7 @@ abstract class EasyController extends \Illuminate\Routing\Controller
             return SendResponse::successData($this->repository->create($request->all()));
         } catch (ValidationException $e) {
             return SendResponse::error(trans('validation.unique', ['attribute' => Translate::translateAttribute($last_check)]));
-        }  catch (EasyException $e) {
+        } catch (EasyException $e) {
             return SendResponse::error($e->getMessage());
         } catch (\Exception $e) {
             if (env('APP_DEBUG', false)) {
@@ -127,7 +135,7 @@ abstract class EasyController extends \Illuminate\Routing\Controller
         $model = $this->getModel($id);
         try {
             return SendResponse::successData($this->repository->delete($model));
-        }  catch (EasyException $e) {
+        } catch (EasyException $e) {
             return SendResponse::error($e->getMessage());
         } catch (\Exception $e) {
             if (env('APP_DEBUG', false)) {
@@ -149,7 +157,7 @@ abstract class EasyController extends \Illuminate\Routing\Controller
                 ->paginate($per_page, ['*'], 'page', $current_page);
             $logs = $logRepository->map($paginator->items());
             return SendResponse::successLogsPagination($paginator, $logs);
-        }  catch (EasyException $e) {
+        } catch (EasyException $e) {
             return SendResponse::error($e->getMessage());
         } catch (\Exception $e) {
             if (env('APP_DEBUG', false)) {
@@ -165,17 +173,20 @@ abstract class EasyController extends \Illuminate\Routing\Controller
         try {
             $per_page = $request['itemsPerPage'] ?? $this->per_page;
             $current_page = $request['page'] ?? 1;
-            $simple_pagination = $request['simple_pagination'] ?? false;
+//            $simple_pagination = $request['simple_pagination'] ?? false;
             $search = $this->repository->search($request->all());
             /** @var \Illuminate\Database\Query\Builder $search */
-            return $simple_pagination
-                ? SendResponse::successSimplePagination(
-                    $search->simplePaginate($per_page, ['*'], 'page', $current_page)
-                )
-                : SendResponse::successPagination(
-                    $search->paginate($per_page, ['*'], 'page', $current_page)
+            if ($this->repository->getWithTotals()) {
+                $clone = clone $search;
+                SendResponse::successPagination(
+                    $search->paginate($per_page, ['*'], 'page', $current_page),
+                    $this->repository->getTotals($clone)
                 );
-        }  catch (EasyException $e) {
+            }
+            return SendResponse::successPagination(
+                $search->paginate($per_page, ['*'], 'page', $current_page)
+            );
+        } catch (EasyException $e) {
             return SendResponse::error($e->getMessage());
         } catch (\Exception $e) {
             if (env('APP_DEBUG', false)) {

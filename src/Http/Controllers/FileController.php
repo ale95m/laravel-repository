@@ -25,6 +25,9 @@ class FileController extends EasyController
             $query->where('type', $type);
         }
         $file = $query->find($file);
+        if (is_null($file)){
+            EasyException::throwException(trans('easy::exeptions.not_found.file'));
+        }
         if (Storage::exists($file->path)) {
             if ($file->type == File::TEXT) {
                 return SendResponse::successData($this->repository->getContent($file));

@@ -178,7 +178,7 @@ abstract class EasyController extends \Illuminate\Routing\Controller
             /** @var \Illuminate\Database\Query\Builder $search */
             if ($this->repository->getWithTotals()) {
                 $clone = clone $search;
-                SendResponse::successPagination(
+                return SendResponse::successPagination(
                     $search->paginate($per_page, ['*'], 'page', $current_page),
                     $this->repository->getTotals($clone)
                 );

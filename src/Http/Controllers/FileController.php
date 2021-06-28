@@ -25,7 +25,7 @@ class FileController extends EasyController
             $query->where('type', $type);
         }
         $file = $query->find($file);
-        if (is_null($file)){
+        if (is_null($file)) {
             EasyException::throwException(trans('easy::exeptions.not_found.file'));
         }
         if (Storage::exists($file->path)) {
@@ -36,6 +36,40 @@ class FileController extends EasyController
             }
         } else {
             EasyException::throwException(trans('easy::exeptions.not_found.file'));
+        }
+    }
+
+    public function getContent(Request $request, $file, ?string $type = null)
+    {
+        $query = File::query();
+        if (!is_null($type)) {
+            $query->where('type', $type);
+        }
+        $file = $query->find($file);
+        if (is_null($file)) {
+            EasyException::throwException(trans('easy::exeptions.not_found.file'));
+        }
+        if (Storage::exists($file->path)) {
+            return SendResponse::successData($this->repository->getContent($file));
+        } else {
+            EasyException::throwException(trans('easy::exeptions.not_found.file'));
+        }
+    }
+
+    public function getBase64(Request $request, $file, ?string $type = null)
+    {
+        $query = File::query();
+        if (!is_null($type)) {
+            $query->where('type', $type);
+        }
+        $file = $query->find($file);
+        if (is_null($file)) {
+            EasyException::throwException(trans('easy::exeptions.not_found.file'));
+        }
+        if (Storage::exists($file->path)) {
+            return SendResponse::successData(
+                base64_encode($this->repository->getContent($file))
+            );
         }
     }
 }

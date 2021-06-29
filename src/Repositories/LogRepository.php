@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 
 class LogRepository extends BaseRepository
 {
-    protected $relationships = [
+    protected ?array $relationships = [
         'user'
     ];
 

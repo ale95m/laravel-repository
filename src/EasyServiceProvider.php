@@ -14,9 +14,7 @@ class EasyServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->loadMigrationsFrom(__DIR__ . '/../Database/migrations');
         $this->mergeConfigFrom(__DIR__ . '/../config/config.php', 'easy');
-        $this->registerRoutes();
     }
 
     /**
@@ -26,6 +24,12 @@ class EasyServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $this->registerRoutes();
+        $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+        $this->loadTranslationsFrom(__DIR__.'/Resources/lang', 'courier');
+        $this->publishes([
+            __DIR__.'/Resources/lang' => resource_path('lang/vendor/easy'),
+        ]);
         if ($this->app->runningInConsole()) {
             $this->publishes([
                 __DIR__ . '/../config/config.php' => config_path('easy.php'),
@@ -40,7 +44,7 @@ class EasyServiceProvider extends ServiceProvider
         });
     }
 
-    protected function routeApiConfiguration()
+    protected function routeApiConfiguration(): array
     {
         return [
             'prefix' => config('easy.api_prefix'),

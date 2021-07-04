@@ -5,6 +5,7 @@ namespace Easy\Repositories;
 
 use Easy\Exceptions\EasyException;
 use Easy\Models\File;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 
 class FileRepository extends BaseRepository
@@ -17,7 +18,7 @@ class FileRepository extends BaseRepository
     {
         return new File();
     }
-    
+
     private function save($file, ?string $type, string $directory, bool $is_text = false, bool $base64Encode = false)
     {
         $directory = $this->getBasePath($directory);

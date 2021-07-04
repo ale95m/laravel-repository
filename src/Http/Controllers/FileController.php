@@ -50,13 +50,13 @@ class FileController extends EasyController
             EasyException::throwException(trans('easy::exeptions.not_found.file'));
         }
         if (Storage::exists($file->path)) {
-            return SendResponse::successData($this->repository->getContent($file));
+            return $this->repository->getContent($file);
         } else {
             EasyException::throwException(trans('easy::exeptions.not_found.file'));
         }
     }
 
-    public function getBase64(Request $request, $file, ?string $type = null)
+    public function getBase64(Request $request, $file, ?string $type = null): string
     {
         $query = File::query();
         if (!is_null($type)) {
@@ -67,9 +67,7 @@ class FileController extends EasyController
             EasyException::throwException(trans('easy::exeptions.not_found.file'));
         }
         if (Storage::exists($file->path)) {
-            return SendResponse::successData(
-                base64_encode($this->repository->getContent($file))
-            );
+            return base64_encode($this->repository->getContent($file));
         }
     }
 }

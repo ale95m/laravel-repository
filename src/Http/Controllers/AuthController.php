@@ -78,7 +78,7 @@ class AuthController extends Controller
         ]);
 
         $reset_password_status = Password::reset($credentials, function ($user, $password) {
-            $user->password = $password;
+            $user->password = bcrypt($password);
             $user->save();
         });
 

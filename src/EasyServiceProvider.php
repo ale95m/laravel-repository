@@ -25,10 +25,10 @@ class EasyServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerRoutes();
-        $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
-        $this->loadTranslationsFrom(__DIR__.'/Resources/lang', 'courier');
+        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'courier');
         $this->publishes([
-            __DIR__.'/Resources/lang' => resource_path('lang/vendor/easy'),
+            __DIR__ . '/../resources/lang' => resource_path('lang/vendor/easy'),
         ]);
         if ($this->app->runningInConsole()) {
             $this->publishes([

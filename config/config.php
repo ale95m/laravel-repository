@@ -11,5 +11,6 @@ return [
     'get_file_prefix' => 'files',
     'email_verification' => false,
     'auth_user_relations' => [],
-    'json_numeric_check' => false
+    'json_numeric_check' => false,
+    'restore_password_route' => null
 ];

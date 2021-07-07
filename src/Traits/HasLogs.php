@@ -13,6 +13,7 @@ use Illuminate\Support\Str;
 /**
  * @property array logableRelations
  * @property array logableAttributes
+ * @property array useFillableAttributes
  */
 trait HasLogs
 {
@@ -25,7 +26,9 @@ trait HasLogs
 
     function getLogableAttributes(): array
     {
-        return $this->logableAttributes ?? [];
+        return ($this->useFillableAttributes ?? false)
+            ? $this->fillable
+            : $this->logableAttributes ?? [];
     }
 
     function getLogableRelations(): array
@@ -56,7 +59,7 @@ trait HasLogs
                         continue;
                     }
                 }
-                $relation_attributes = count($split) > 1? explode(',', $split[1]): null;
+                $relation_attributes = count($split) > 1 ? explode(',', $split[1]) : null;
                 $external_logs = $this->$relation;
                 $relation_data = new Collection();
                 if (is_countable($external_logs)) {

@@ -123,24 +123,24 @@ abstract class EasyController extends \Illuminate\Routing\Controller
         return SendResponse::successLogsPagination($paginator, $logs);
     }
 
-    public function paginate(PaginateRequest $request, string $searchFunction = 'search'): JsonResponse
+    public function paginate(PaginateRequest $request, string|Builder $search = 'search'): JsonResponse
     {
         $per_page = $request['itemsPerPage'] ?? $this->per_page;
         $current_page = $request['page'] ?? 1;
 //            $simple_pagination = $request['simple_pagination'] ?? false;
-        $search = $this->repository->$searchFunction($request->all());
-        /** @var \Illuminate\Database\Query\Builder $search */
+        $query = is_string($search)
+            ? $this->repository->$search($request->all())
+            : $search;
         if ($this->repository->getWithTotals()) {
-            $clone = clone $search;
+            $clone = clone $query;
             return SendResponse::successPagination(
-                $search->paginate($per_page, ['*'], 'page', $current_page),
+                $query->paginate($per_page, ['*'], 'page', $current_page),
                 $this->repository->getTotals($clone)
             );
         }
         return SendResponse::successPagination(
-            $search->paginate($per_page, ['*'], 'page', $current_page)
+            $query->paginate($per_page, ['*'], 'page', $current_page)
         );
-
     }
 
     /**

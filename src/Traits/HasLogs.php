@@ -13,7 +13,7 @@ use Illuminate\Support\Str;
 /**
  * @property array logableRelations
  * @property array logableAttributes
- * @property array useFillableAttributes
+ * @property bool useFillableAttributes
  */
 trait HasLogs
 {

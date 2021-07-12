@@ -10,20 +10,13 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 
-class User extends Authenticatable implements ILogable
+class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasLogs;
+    use HasApiTokens, HasFactory, Notifiable;
 
-    protected $authField = 'email';
-    protected $authPasswordField = 'password';
+    protected string|array $authField = 'email';
+    protected string $authPasswordField = 'password';
 
-    #region Login
-    protected $logableAttributes = [
-    ];
-    protected $logableRelations = [
-        'roles:name'
-    ];
-    #endregion
 
 //    #region Relations
 //    public function roles()
@@ -50,30 +43,23 @@ class User extends Authenticatable implements ILogable
         'email_verified_at' => 'datetime',
     ];
 
-    function getToken()
+    function getToken(): string
     {
         return $this->createToken(env('APP_NAME'))->accessToken;
     }
 
-    function removeToken()
+    function removeToken(): ?bool
     {
         return $this->token()->delete();
     }
 
-//    /**
-//     * @param string $role
-//     * @return bool
-//     */
-//    public function hasRole(string $role): bool
-//    {
-//        return $this->roles()->where('name', $role)->exists();
-//    }
 
-    public function getAuthField()
+    public function getAuthField(): array
     {
-        return $this->authField;
+        return is_array($this->authField) ? $this->authField : [$this->authField];
     }
-    public function getAuthPasswordField()
+
+    public function getAuthPasswordField(): string
     {
         return $this->authPasswordField;
     }

@@ -16,14 +16,22 @@ class AuthController extends Controller
     public function login(Request $request): \Illuminate\Http\JsonResponse
     {
         $user_model = config('easy.user_model');
+        /** @var User $user */
         $user = new $user_model();
         $password_field = $user->getAuthPasswordField();
-        $auth_field = $user->getAuthField();
+        $auth_fields = $user->getAuthField();
+        $current_auth_field = $auth_fields[0];
+        foreach ($auth_fields as $auth_field) {
+            if (array_key_exists($auth_field, (array)$request)) {
+                $current_auth_field = $auth_field;
+                break;
+            }
+        }
         $request->validate([
-            $auth_field => 'required|string',
+            $current_auth_field => 'required|string',
             $password_field => 'required|string',
         ]);
-        $credentials = request([$auth_field, $password_field]);
+        $credentials = request([$current_auth_field, $password_field]);
         if (Auth::attempt($credentials)) {
             /** @var User $user */
             $user = Auth::user();
@@ -63,7 +71,7 @@ class AuthController extends Controller
         $email = $credentials['email'];
         $token = $credentials['token'];
         $url = config('easy.restore_password_route');
-        if (is_null($url)){
+        if (is_null($url)) {
             EasyException::throwException(trans('easy::exeptions.not_found.model'));
         }
         return redirect("$url?email=$email&token=$token");

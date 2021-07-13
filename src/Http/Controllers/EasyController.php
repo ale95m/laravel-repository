@@ -158,12 +158,12 @@ abstract class EasyController extends \Illuminate\Routing\Controller
     }
 
     /**
-     * @param Builder $query
+     * @param $query
      * @param $field
      * @param array $data
-     * @return Builder
+     * @return mixed
      */
-    protected function uniqueConditions($query, $field, array $data): Builder
+    protected function uniqueConditions($query, $field, array $data): mixed
     {
         return $query->whereNotNull($field);
     }

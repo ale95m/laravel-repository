@@ -41,14 +41,18 @@ trait HasLogs
         $data = new Collection();
         $attributes = is_null($only_attributes)
             ? $this->getLogableAttributes()
-            : array_intersect($this->getLogableAttributes(), $only_attributes);
+            : $only_attributes;
 
         array_push($attributes, $this->getKeyName());
         foreach ($attributes as $attribute) {
-            if (!$include_null && is_null($this->$attribute)) {
+            $filterMethod = 'log' . Str::studly($attribute) . 'Attribute';
+            $value = method_exists(get_called_class(), $filterMethod)
+                ? $this->$filterMethod()
+                : $this->$attribute;
+            if (!$include_null && is_null($value)) {
                 continue;
             }
-            $data[$attribute] = $this->$attribute;
+            $data[$attribute] = $value;
         }
         if ($with_relations) {
             foreach ($this->getLogableRelations() as $relation) {

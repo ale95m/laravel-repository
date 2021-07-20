@@ -5,6 +5,8 @@ namespace Easy\Http\Controllers;
 use Easy\Http\Requests\PaginateRequest;
 use Easy\Http\Responses\SendResponse;
 use Easy\Repositories\LogRepository;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\JsonResponse;
 
 class LogController extends EasyController
 {

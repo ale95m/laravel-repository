@@ -2,6 +2,7 @@
 
 namespace Easy\Repositories;
 
+use Easy\Exceptions\EasyException;
 use Easy\Interfaces\ILogable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -197,20 +198,15 @@ abstract class BaseRepository
     private function applyFilters(&$query, array $data)
     {
         $filter = Arr::only($data, $this->filters);
-        $filter = array_filter($filter, 'strlen');
+        $filter = array_filter($filter);
         foreach ($filter as $param => $value) {
             if (isset($filter[$param])) {
-                $split = explode(':', $param);
-                $filterMethod = 'searchBy' . Str::studly($split[0]);
-                if (method_exists(get_called_class(), $filterMethod)) {
-                    $this->$filterMethod($query, $value);
-                } else {
-                    $this->addSearchParam($query, $param, $value);
-                }
+                $this->addSearchParam($query, $param, $value);
             }
         }
     }
 
+    #region Filter's methods
     private function relationCondition($query, string $relation, string $field, string $operator, $value)
     {
         $query->whereHas($relation, function ($query) use ($relation, $value, $operator, $field) {
@@ -218,7 +214,7 @@ abstract class BaseRepository
             if (count($split_relation) > 1) {
                 $this->relationCondition($query, $split_relation[0], $split_relation[1], $operator, $value);
             } else {
-                $this->addWhere($query, $field, $operator, $value);
+                $this->addConditions($query, $field, $operator, $value);
             }
         });
     }
@@ -230,11 +226,25 @@ abstract class BaseRepository
      * @param $value
      * @return Builder
      */
-    private function addWhere($query, string $field, string $operator, $value)
+    private function addSibgleWhere(&$query, string $field, string $operator, $value, $boolean = 'and')
     {
         return $operator == "null"
             ? ($value == true ? $query->whereNull($field) : $query->whereNotNull($field))
-            : $query->where($field, $operator, $value);
+            : $query->where($field, $operator, $value, $boolean);
+    }
+
+    private function addConditions(&$query, string $field, string $operator, $value, $boolean = 'and')
+    {
+        if (is_array($value)) {
+            $query->where(function ($internal_query) use ($value, $field, $operator) {
+                foreach ($value as $single_value) {
+                    /** @var Builder $query */
+                    $this->addSibgleWhere($internal_query, $field, $operator, $single_value, 'or');
+                }
+            });
+        } else {
+            $this->addSibgleWhere($query, $field, $operator, $value);
+        }
     }
 
     /**
@@ -249,18 +259,19 @@ abstract class BaseRepository
         if (method_exists(get_called_class(), $filterMethod)) {
             $this->$filterMethod($query, $value);
         } else {
-            $operator = "=";
-            if (count($split) > 1) {
-                $operator = $split[1];
-            }
-            $split_field = explode($this->split_relation, $split[0], 2);
+            $operator = count($split) > 1 ? $split[1] : '=';
+            $field = $split[0];
+            $split_field = explode($this->split_relation, $field, 2);
+            $relation = $split_field[0];
             if (count($split_field) > 1) {
-                $this->relationCondition($query, $split_field[0], $split_field[1], $operator, $value);
+                $this->relationCondition($query, $relation, $split_field[1], $operator, $value);
             } else {
-                $this->addWhere($query, $split[0], $operator, $value);
+                $this->addConditions($query, $field, $operator, $value);
             }
         }
     }
+    #endregion
+
     #endregion
 
     #region Login
@@ -298,7 +309,6 @@ abstract class BaseRepository
      */
     protected function creating(array &$data): void
     {
-
     }
 
     /**
@@ -350,6 +360,7 @@ abstract class BaseRepository
     }
 
     #endregion
+
     public function getWithTotals(): bool
     {
         return $this->with_totals;

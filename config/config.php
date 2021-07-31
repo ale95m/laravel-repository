@@ -12,5 +12,18 @@ return [
     'email_verification' => false,
     'auth_user_relations' => [],
     'json_numeric_check' => false,
-    'restore_password_route' => null
+    'restore_password_route' => null,
+
+    'pagination' => [
+        'input' => [
+            'items_per_page' => 'itemsPerPage',
+            'current_page' => 'page',
+        ],
+        'output' => [
+            'items_per_page' => 'itemsPerPage',
+            'current_page' => 'page',
+            'items_length' => 'itemsLength',
+            'page_count' => 'pageCount',
+        ]
+    ],
 ];

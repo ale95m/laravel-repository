@@ -52,6 +52,10 @@ class SendResponse
 
     public static function successPagination(LengthAwarePaginator $pagination, $totals = null, string $message = 'OK'): JsonResponse
     {
+        $items_per_page_field = config('easy.output.pagination.items_per_page', 'itemsPerPage');
+        $current_page_field = config('easy.output.pagination.current_page', 'page');
+        $items_length_field = config('easy.output.pagination.items_length', 'itemsLength');
+        $page_count_field = config('easy.output.pagination.page_count', 'pageCount');
         return self::successData([
             'current' => $pagination->items(),
             'totals' => $totals,
@@ -60,21 +64,23 @@ class SendResponse
 //                'per_page' => $pagination->perPage(),
 //                'current_page' => $pagination->currentPage(),
 //                'last_page' => $pagination->lastPage()
-                'itemsLength' => $pagination->total(),
-                'itemsPerPage' => $pagination->perPage(),
-                'page' => $pagination->currentPage(),
-                'pageCount' => $pagination->lastPage()
+                $items_length_field => $pagination->total(),
+                $items_per_page_field => $pagination->perPage(),
+                $current_page_field => $pagination->currentPage(),
+                $page_count_field => $pagination->lastPage()
             ]
         ], $message);
     }
 
     public static function successSimplePagination(Paginator $pagination, string $message = 'OK'): JsonResponse
     {
+        $items_per_page_field = config('easy.output.pagination.items_per_page', 'itemsPerPage');
+        $current_page_field = config('easy.output.pagination.current_page', 'page');
         return self::successData([
             'current' => $pagination->items(),
             'pagination' => [
-                'itemsPerPage' => $pagination->perPage(),
-                'page' => $pagination->currentPage(),
+                $items_per_page_field => $pagination->perPage(),
+                $current_page_field => $pagination->currentPage(),
             ]
         ], $message);
     }

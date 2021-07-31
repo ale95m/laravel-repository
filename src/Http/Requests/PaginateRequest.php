@@ -23,12 +23,14 @@ class PaginateRequest extends FormRequest
      */
     public function rules()
     {
+        $items_per_page_field = config('easy.input.pagination.items_per_page', 'itemsPerPage');
+        $current_page_field = config('easy.input.pagination.current_page', 'page');
         return [
-            'itemsPerPage'=>'integer|min:1',
-            'page'=>'integer|min:1',
-            'simple_pagination'=>'boolean',
-            'sort_by'=>'string',
-            'sort_asc'=>'boolean',
+            $items_per_page_field => 'integer|min:1',
+            $current_page_field => 'integer|min:1',
+            'simple_pagination' => 'boolean',
+            'sort_by' => 'string',
+            'sort_asc' => 'boolean',
         ];
     }
 }

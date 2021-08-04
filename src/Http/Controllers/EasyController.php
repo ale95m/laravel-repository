@@ -111,6 +111,18 @@ abstract class EasyController extends \Illuminate\Routing\Controller
         return SendResponse::successData($this->repository->delete($model));
     }
 
+    /**
+     * Restore the specified resource if is softdeleted.
+     *
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function restore($id): JsonResponse
+    {
+        $model = $this->getModel($id);
+        return SendResponse::successData($this->repository->restore($model));
+    }
+
     public function getLogs(PaginateRequest $request, $id): JsonResponse
     {
         $model = $this->getModel($id);

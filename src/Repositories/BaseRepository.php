@@ -128,6 +128,11 @@ abstract class BaseRepository
         return $model;
     }
 
+    public function restore(Model $model)
+    {
+        return $model->restore();
+    }
+
     /**
      * @param int $id
      * @param bool $clean

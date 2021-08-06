@@ -23,17 +23,16 @@ class SendResponse
         ]);
     }
 
-    /**
-     * @param string $message
-     * @param int $status
-     * @return JsonResponse
-     */
-    public static function error(string $message, int $status = 200)
+    public static function error(string $message, int $status = 200, ?array $data = null): JsonResponse
     {
-        return response()->json([
+        $response = [
             'status' => 'error',
             'message' => $message
-        ], $status);
+        ];
+        if (isset($data)) {
+            $response['data'] = config('easy.json_numeric_check') ? json_encode($data, JSON_NUMERIC_CHECK) : json_encode($data);
+        }
+        return response()->json($response, $status);
     }
 
     /**

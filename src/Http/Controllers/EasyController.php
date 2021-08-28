@@ -122,8 +122,7 @@ abstract class EasyController extends \Illuminate\Routing\Controller
      */
     public function restore($id): JsonResponse
     {
-        $model = $this->getModel($id);
-        return SendResponse::successData($this->repository->restore($model));
+        return SendResponse::successData($this->repository->restore($id));
     }
 
     public function getLogs(PaginateRequest $request, $id): JsonResponse

@@ -128,8 +128,13 @@ abstract class BaseRepository
         return $model;
     }
 
-    public function restore(Model $model)
+    public function restore($model)
     {
+        if (is_numeric($model)) {
+            $model = $this->getModel()->onlyTrashed()->findOrFail($model);
+        } else {
+            throw new ModelNotFoundException("Not found");
+        }
         return $model->restore();
     }
 

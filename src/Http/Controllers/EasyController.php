@@ -85,6 +85,9 @@ abstract class EasyController extends \Illuminate\Routing\Controller
     protected function baseUpdate($request, $model): JsonResponse
     {
         $last_check = '';
+        if (!is_subclass_of($model, Model::class)) {
+            $model = $this->getModel($model);
+        }
         try {
             foreach ($this->uniqueFields as $field) {
                 $last_check = $field;

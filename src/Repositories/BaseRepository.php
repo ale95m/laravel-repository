@@ -190,19 +190,17 @@ abstract class BaseRepository
 
     private function applyOrderBy(&$query, array $data)
     {
-        $orderBy = $data['sort_by'] ?? null;
-        if (!is_null($orderBy)) {
+        $orderBy = $data['sort_by'] ?? $this->orderBy;
+        if ($orderBy != $this->orderBy) {
             if (!in_array($orderBy, $this->sortable_fields)) {
-                return;
+                $orderBy = $this->orderBy;
             }
-        } elseif (is_null($this->orderBy)) {
+        }
+        if (is_null($orderBy)) {
             return;
-        } else {
-            $orderBy = $this->orderBy;
         }
         $orderByAsc = $data['sort_asc'] ?? $this->orderByAsc;
         $query->orderBy($orderBy, $orderByAsc ? 'asc' : 'desc');
-
     }
 
     private function applyFilters(&$query, array $data)

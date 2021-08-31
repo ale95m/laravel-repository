@@ -13,6 +13,7 @@ use Illuminate\Support\Str;
 abstract class BaseRepository
 {
     protected array $filters = [];
+    protected array $filters_alias = [];
     protected array $select_fields = ['*'];
     protected array $sortable_fields = [];
     protected ?string $orderBy = null;
@@ -209,6 +210,7 @@ abstract class BaseRepository
         $filter = array_filter($filter);
         foreach ($filter as $param => $value) {
             if (isset($filter[$param])) {
+                $param = $this->filters_alias[$param] ?? $param;
                 $this->addSearchParam($query, $param, $value);
             }
         }

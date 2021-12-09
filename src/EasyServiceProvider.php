@@ -26,7 +26,7 @@ class EasyServiceProvider extends ServiceProvider
     {
         $this->registerRoutes();
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
-        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'courier');
+        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'easy');
         $this->publishes([
             __DIR__ . '/../resources/lang' => resource_path('lang/vendor/easy'),
         ]);

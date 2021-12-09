@@ -38,7 +38,7 @@ class AuthController extends Controller
             $token = $user->getToken();
             return SendResponse::success($token);
         } else {
-            return SendResponse::error('Unauthorised', 401);
+            return SendResponse::error(trans('easy::messages.auth.invalid_credentials'), 401);
         }
     }
 
@@ -47,12 +47,12 @@ class AuthController extends Controller
         /** @var User $user */
         $user = $request->user();
         $user->removeToken();
-        return SendResponse::success('logout');
+        return SendResponse::success(trans('easy::messages.auth.logout'));
     }
 
     function unauthorized(): \Illuminate\Http\JsonResponse
     {
-        return SendResponse::error('Unauthorized', 401);
+        return SendResponse::error(trans('easy::messages.auth.unauthorized'), 401);
     }
 
     public function forgot(): \Illuminate\Http\JsonResponse
@@ -72,7 +72,7 @@ class AuthController extends Controller
         $token = $credentials['token'];
         $url = config('easy.restore_password_route');
         if (is_null($url)) {
-            EasyException::throwException(trans('easy::exeptions.not_found.model'));
+            EasyException::throwException(trans('easy::exceptions.not_found.model'));
         }
         return redirect("$url?email=$email&token=$token");
     }
@@ -91,7 +91,7 @@ class AuthController extends Controller
         });
 
         if ($reset_password_status == Password::INVALID_TOKEN) {
-            return SendResponse::error('Invalid token');
+            return SendResponse::error(trans('easy::messages.auth.invalid_token'));
         }
 
         return SendResponse::success();

@@ -36,8 +36,7 @@ abstract class BaseRepository
      * @param Builder|null $query
      * @return Builder
      */
-    public
-    function search(array $data = array(), ?Builder $query = null)
+    public function search(array $data = array(), ?Builder $query = null)
     {
         if (is_null($query)) {
             $query = $this->getModel()->select($this->select_fields);
@@ -134,7 +133,7 @@ abstract class BaseRepository
         if (is_numeric($model)) {
             $model = $this->getModel()->onlyTrashed()->findOrFail($model);
         } else {
-            throw new ModelNotFoundException("Not found");
+            throw new ModelNotFoundException(trans('easy::exceptions.not_found.model'));
         }
         return $model->restore();
     }
@@ -383,7 +382,7 @@ abstract class BaseRepository
 
     protected function getTotals(Builder $query)
     {
-        throw new \Exception(trans('easy::exceptions.not_implemented', ['name' => 'function getTotals']));
+        throw new \Exception(trans('easy::exceptions.not_implemented', ['name' => 'getTotals']));
     }
 }
 

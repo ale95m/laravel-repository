@@ -7,5 +7,5 @@ return [
         'url' => 'No se ha podido encontrar la dirección.',
     ],
     'can_not' => 'No es posible realizar esta acción.',
-    'not_implemented' => ':name is not implemented'
+    'not_implemented' => ':name no está implementado'
 ];

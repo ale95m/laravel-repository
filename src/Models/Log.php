@@ -2,7 +2,6 @@
 
 namespace Easy\Models;
 
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -32,6 +31,6 @@ class Log extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(config('easy.user_model')::class);
     }
 }

@@ -31,6 +31,6 @@ class Log extends Model
 
     public function user()
     {
-        return $this->belongsTo(config('easy.user_model')::class);
+        return $this->belongsTo(config('easy.user_model'));
     }
 }

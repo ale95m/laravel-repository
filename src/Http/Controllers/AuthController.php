@@ -6,6 +6,7 @@ use Easy\Exceptions\EasyException;
 use Easy\Models\User;
 use Easy\Http\Responses\SendResponse;
 use App\Http\Controllers\Controller;
+use Easy\Repositories\LogRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Password;
@@ -36,6 +37,7 @@ class AuthController extends Controller
             /** @var User $user */
             $user = Auth::user();
             $token = $user->getToken();
+            LogRepository::createLog('login',get_class($user),null,null,$user::class,$user->getKey());
             return SendResponse::success($token);
         } else {
             return SendResponse::error(trans('easy::messages.auth.invalid_credentials'), 401);
@@ -47,6 +49,7 @@ class AuthController extends Controller
         /** @var User $user */
         $user = $request->user();
         $user->removeToken();
+        LogRepository::createLog('logout',get_class($user),null,null,$user::class,$user->getKey());
         return SendResponse::success(trans('easy::messages.auth.logout'));
     }
 

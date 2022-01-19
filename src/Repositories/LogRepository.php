@@ -11,6 +11,10 @@ use Illuminate\Support\Facades\Auth;
 
 class LogRepository extends BaseRepository
 {
+    protected ?string $orderBy = 'created_at';
+    protected bool $orderByAsc = false;
+    protected array $sortable_fields = ['created_at', 'model', 'action'];
+    
     protected ?array $relationships = [
         'user'
     ];
@@ -41,7 +45,7 @@ class LogRepository extends BaseRepository
             $user_id = Auth::id();
         }
 
-        $ip =  $_SERVER['REMOTE_ADDR'] ?? 'localhost';
+        $ip = $_SERVER['REMOTE_ADDR'] ?? 'localhost';
         Log::create
         ([
             'user_id' => $user_id,

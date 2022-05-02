@@ -27,16 +27,16 @@ abstract class BaseRepository
     protected bool $with_totals = false;
 
     /**
-     * @return Model
+     * @return \Illuminate\Database\Eloquent\Model
      */
-    abstract function getModel();
+    abstract function getModel(): \Illuminate\Database\Eloquent\Model;
 
     /**
      * @param array $data
      * @param Builder|null $query
      * @return Builder
      */
-    public function search(array $data = array(), ?Builder $query = null)
+    public function search(array $data = array(), ?Builder $query = null): Builder
     {
         if (is_null($query)) {
             $query = $this->getModel()->select($this->select_fields);
@@ -190,7 +190,7 @@ abstract class BaseRepository
 
     private function applyOrderBy(&$query, array $data)
     {
-        $orderBy = $data['sort_by'] ?? $this->orderBy;
+        $orderBy = $data[$this->getSortByFieldName()] ?? $this->orderBy;
         if ($orderBy != $this->orderBy) {
             if (!in_array($orderBy, $this->sortable_fields)) {
                 $orderBy = $this->orderBy;
@@ -199,8 +199,23 @@ abstract class BaseRepository
         if (is_null($orderBy)) {
             return;
         }
-        $orderByAsc = $data['sort_asc'] ?? $this->orderByAsc;
+        $orderByAsc = $data[$this->getSortAscFieldName()] ?? $this->orderByAsc;
         $query->orderBy($orderBy, $orderByAsc ? 'asc' : 'desc');
+    }
+
+    protected function getSortByFieldName(): string
+    {
+        return config('easy.query.sort_by', 'sort_by');
+    }
+
+    protected function getSortAscFieldName(): string
+    {
+        return config('easy.query.sort_asc', 'sort_asc');
+    }
+
+    protected function getSearchByPrefix(): string
+    {
+        return config('easy.query.searchBy', 'searchBy');
     }
 
     private function applyFilters(&$query, array $data)
@@ -264,7 +279,7 @@ abstract class BaseRepository
     private function addSearchParam($query, string $param, $value)
     {
         $split = explode($this->split_operator, $param, 2);
-        $filterMethod = 'searchBy' . Str::studly($split[0]);
+        $filterMethod = $this->getSearchByPrefix() . Str::studly($split[0]);
         if (method_exists(get_called_class(), $filterMethod)) {
             $this->$filterMethod($query, $value);
         } else {

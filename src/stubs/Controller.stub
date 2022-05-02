@@ -1,0 +1,24 @@
+<?php
+
+namespace $NAMESPACE$;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+
+class $CLASS_NAME$ extends \Easy\Http\Controllers\EasyController
+{
+
+    public function __construct($REPOSITORY$ $repository)
+    {
+        $this->repository = $repository;
+    }
+
+    protected function store(Request $request): JsonResponse
+    {
+        return parent::baseStore($request);
+    }
+
+    protected function update(Request $request, $model): JsonResponse
+    {
+        return parent::baseUpdate($request, $model);
+    }
+}

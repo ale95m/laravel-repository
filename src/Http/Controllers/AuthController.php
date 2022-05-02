@@ -3,6 +3,7 @@
 namespace Easy\Http\Controllers;
 
 use Easy\Exceptions\EasyException;
+use Easy\Interfaces\IAuthenticable;
 use Easy\Models\User;
 use Easy\Http\Responses\SendResponse;
 use App\Http\Controllers\Controller;
@@ -17,13 +18,16 @@ class AuthController extends Controller
     public function login(Request $request): \Illuminate\Http\JsonResponse
     {
         $user_model = config('easy.user_model');
+        if (!is_subclass_of($user_model,IAuthenticable::class)){
+            throw new \Exception(trans('easy::exceptions.auth.user_model_is_nut_authenticable', ['model' => $user_model]));
+        }
         /** @var User $user */
         $user = new $user_model();
         $password_field = $user->getAuthPasswordField();
         $auth_fields = $user->getAuthField();
         $current_auth_field = $auth_fields[0];
         foreach ($auth_fields as $auth_field) {
-            if (array_key_exists($auth_field, (array)$request)) {
+            if (array_key_exists($auth_field, $request->all())) {
                 $current_auth_field = $auth_field;
                 break;
             }

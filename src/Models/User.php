@@ -3,6 +3,7 @@
 namespace Easy\Models;
 
 
+use Easy\Interfaces\IAuthenticable;
 use Easy\Interfaces\ILogable;
 use Easy\Traits\HasLogs;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,20 +11,12 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 
-class User extends Authenticatable
+class User extends Authenticatable implements IAuthenticable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
     protected string|array $authField = 'email';
     protected string $authPasswordField = 'password';
-
-
-//    #region Relations
-//    public function roles()
-//    {
-//        return $this->belongsToMany(Role::class);
-//    }
-//    #endregion
 
     /**
      * The attributes that should be hidden for arrays.
@@ -53,7 +46,7 @@ class User extends Authenticatable
         return $this->token()->delete();
     }
 
-
+    #region Interface implementation
     public function getAuthField(): array
     {
         return is_array($this->authField) ? $this->authField : [$this->authField];
@@ -63,5 +56,5 @@ class User extends Authenticatable
     {
         return $this->authPasswordField;
     }
-
+    #endregion
 }

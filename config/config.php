@@ -26,4 +26,17 @@ return [
             'page_count' => 'pageCount',
         ]
     ],
+    'query' => [
+        'sort_by' => 'sort_by',
+        'sort_asc' => 'sort_asc',
+        'only_deleted' => 'only_deleted',
+        'with_deleted' => 'with_deleted',
+        'searchBy' => 'searchBy',
+    ],
+    'project_directories' => [
+        'models' => 'App\\Models',
+        'controllers' => 'App\\Http\\Controllers',
+        'repositories' => 'App\\Repositories',
+        'seeders' => 'Database\\Seeders',
+    ],
 ];

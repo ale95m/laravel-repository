@@ -1,0 +1,26 @@
+<?php
+
+namespace $NAMESPACE$;
+
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
+
+class $CLASS_NAME$ extends Seeder
+{
+    private $repository;
+
+    public function __construct($REPOSITORY$ $repository)
+    {
+        $this->repository = $repository;
+    }
+
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        //
+    }
+}

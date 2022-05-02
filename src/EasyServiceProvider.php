@@ -2,6 +2,10 @@
 
 namespace Easy;
 
+use Easy\Console\Commands\MakeEasyControllerCommand;
+use Easy\Console\Commands\MakeEasyModel;
+use Easy\Console\Commands\MakeEasyRepositoryCommand;
+use Easy\Console\Commands\MakeEasySeederCommand;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
 
@@ -34,6 +38,14 @@ class EasyServiceProvider extends ServiceProvider
             $this->publishes([
                 __DIR__ . '/../config/config.php' => config_path('easy.php'),
             ], 'config');
+        }
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                MakeEasyModel::class,
+                MakeEasyControllerCommand::class,
+                MakeEasyRepositoryCommand::class,
+                MakeEasySeederCommand::class
+            ]);
         }
     }
 

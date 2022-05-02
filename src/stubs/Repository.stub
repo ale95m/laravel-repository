@@ -1,0 +1,14 @@
+<?php
+
+namespace $NAMESPACE$;
+
+class $CLASS_NAME$ extends \Easy\Repositories\BaseRepository
+{
+    /**
+     * @inheritDoc
+     */
+    function getModel(): $METHOD_RETURN$
+    {
+        $METHOD_BODY$
+    }
+}

@@ -139,8 +139,8 @@ abstract class EasyController extends \Illuminate\Routing\Controller
 
     public function paginate(PaginateRequest $request, string|Builder $search = 'search'): JsonResponse
     {
-        $items_per_page_field = config('easy.input.pagination.items_per_page', 'itemsPerPage');
-        $current_page_field = config('easy.input.pagination.current_page', 'page');
+        $items_per_page_field = config('easy.input.pagination.items_per_page', 'items_per_page');
+        $current_page_field = config('easy.input.pagination.current_page', 'current_page');
         $per_page = $request[$items_per_page_field] ?? $this->per_page;
         $current_page = $request[$current_page_field] ?? 1;
 //            $simple_pagination = $request['simple_pagination'] ?? false;

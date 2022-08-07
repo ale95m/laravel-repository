@@ -51,12 +51,12 @@ class MakeEasyRepositoryCommand extends EasyCreateCommand
 
     public function getNamespace(): string
     {
-        return config('easy.proyect_directories.repositories');
+        return config('easy.project_directories.repositories');
     }
 
     public function getModelsNamespace(): string
     {
-        return config('easy.proyect_directories.models');
+        return config('easy.project_directories.models');
     }
 
     /**
@@ -73,22 +73,35 @@ class MakeEasyRepositoryCommand extends EasyCreateCommand
         $namespase = $folder != ''
             ? $this->getNamespace() . '\\' . trim($folder, '\\/')
             : $this->getNamespace();
+
+        $model_using = 'Illuminate\Database\Eloquent\Model';
         if (!is_null($model_name)) {
             $model = $this->getModelsNamespace() . '\\' . $model_name;
+            $model_using = $model;
+            $model_exist = false;
             if (!$this->files->exists($model . '.php')) {
                 if ($this->confirm("The class $model_name don't exist. Do you wish to create it?")) {
                     Artisan::call('make:model ' . $model_name);
+                    $model_exist = true;
                 }
             } else {
                 if (!is_subclass_of('\\' . $model, \Illuminate\Database\Eloquent\Model::class)) {
                     EasyException::throwException("The $model_name class isn't subclass of Illuminate\Database\Eloquent\Model");
                 }
+                $model_exist = true;
+            }
+            if ($model_exist) {
+                if ($model_name == $class_name) {
+                    $model_name .= 'Model';
+                    $model_using .= ' as ' . $model_name;
+                }
             }
         }
         return [
-            'NAMESPACE' =>$namespase,
-            'METHOD_RETURN' => $model_name ? '\\' . $model : '\Illuminate\Database\Eloquent\Model',
-            'METHOD_BODY' => $model_name ? 'return new \\' . $model . '();' : "throw new \Exception('Not implemented function');//TODO: return the model",
+            'NAMESPACE' => $namespase,
+            'MODEL_USING' => $model_using,
+            'MODEL' => $model_name ?? 'Model',
+            'METHOD_BODY' => $model_name ? 'return new ' . $model_name . '();' : "throw new \Exception('Not implemented function');//TODO: return the model",
             'CLASS_NAME' => $class_name
         ];
     }

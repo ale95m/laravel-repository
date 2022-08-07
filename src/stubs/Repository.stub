@@ -2,12 +2,14 @@
 
 namespace $NAMESPACE$;
 
+use $MODEL_USING$;
+
 class $CLASS_NAME$ extends \Easy\Repositories\BaseRepository
 {
     /**
      * @inheritDoc
      */
-    function getModel(): $METHOD_RETURN$
+    function getModel(): $MODEL$
     {
         $METHOD_BODY$
     }

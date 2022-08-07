@@ -41,12 +41,12 @@ class MakeEasySeederCommand extends EasyCreateCommand
 
     public function getNamespace(): string
     {
-        return config('easy.proyect_directories.seeders');
+        return config('easy.project_directories.seeders');
     }
 
     public function getRepositoriesNamespace(): string
     {
-        return config('easy.proyect_directories.repositories');
+        return config('easy.project_directories.repositories');
     }
 
     /**

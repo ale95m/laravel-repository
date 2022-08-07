@@ -5,6 +5,7 @@ namespace Easy\Console\Commands;
 use Easy\Exceptions\EasyException;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
+use Psy\Util\Str;
 
 class MakeEasyControllerCommand extends EasyCreateCommand
 {
@@ -41,12 +42,12 @@ class MakeEasyControllerCommand extends EasyCreateCommand
 
     public function getNamespace(): string
     {
-        return config('easy.proyect_directories.controllers');
+        return config('easy.project_directories.controllers');
     }
 
     public function getRepositoriesNamespace(): string
     {
-        return config('easy.proyect_directories.repositories');
+        return config('easy.project_directories.repositories');
     }
 
     /**
@@ -73,22 +74,46 @@ class MakeEasyControllerCommand extends EasyCreateCommand
         $namespase = $folder != ''
             ? $this->getNamespace() . '\\' . trim($folder, '\\/')
             : $this->getNamespace();
+        $model_name = '/*TODO: model class*/';
+        $model_param = 'model';
+        $model_using = 'Illuminate\Database\Eloquent\Model';
         if (!is_null($repository_name)) {
-            $repository = $this->getRepositoriesNamespace() . '\\' . $repository_name;
-            if (!$this->files->exists($repository . '.php')) {
+            $repository_using = $this->getRepositoriesNamespace() . '\\' . $repository_name;
+            $repository_exist = false;
+            if (!$this->files->exists($repository_using . '.php')) {
                 if ($this->confirm("The class $repository_name don't exist. Do you wish to create it?")) {
                     Artisan::call('easy:repository ' . $repository_name);
+                    $repository_exist = true;
                 }
             } else {
-                if (!is_subclass_of('\\' . $repository, \Easy\Repositories\BaseRepository::class)) {
+                if (!is_subclass_of('\\' . $repository_using, \Easy\Repositories\BaseRepository::class)) {
                     EasyException::throwException("The class $repository_name isn't subclass of Easy\Repositories\BaseRepository");
                 }
+                $repository_exist = true;
             }
+            if ($repository_exist) {
+                try {
+                    $repo = new $repository_using();
+                    $model_using = $repo->getModel()::class;
+                    $model_name = class_basename($model_using);
+                    $model_param = lcfirst($model_name);
+                } catch (\Exception $exception) {
+                }
+            }
+            if ($repository_name == $model_name) {
+                $repository_name .= 'Repository';
+                $repository_using .= ' as ' . $repository_name;
+            }
+
         }
         return [
             'NAMESPACE' => $namespase,
             'CLASS_NAME' => $class_name,
-            'REPOSITORY' => $repository_name ? "\\$repository" : '/*TODO: Repository*/'
+            'REPOSITORY' => $repository_name ?? '/*TODO: Repository class*/',
+            'REPOSITORY_USING' => $repository_name ? "$repository_using" : $this->getRepositoriesNamespace(),
+            'MODEL_USING' => $model_using,
+            'MODEL' => $model_name,
+            'MODEL_PARAM' => $model_param
         ];
     }
 }

@@ -100,8 +100,8 @@ class MakeEasyRepositoryCommand extends EasyCreateCommand
         return [
             'NAMESPACE' => $namespase,
             'MODEL_USING' => $model_using,
-            'MODEL' => $model_name ?? 'Model',
-            'METHOD_BODY' => $model_name ? 'return new ' . $model_name . '();' : "throw new \Exception('Not implemented function');//TODO: return the model",
+            'MODEL' => class_basename($model_name) ?? 'Model',
+            'METHOD_BODY' => $model_name ? 'return new ' . class_basename($model_name) . '();' : "throw new \Exception('Not implemented function');//TODO: return the model",
             'CLASS_NAME' => $class_name
         ];
     }

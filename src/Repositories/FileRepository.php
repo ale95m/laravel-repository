@@ -14,7 +14,7 @@ class FileRepository extends BaseRepository
     /**
      * @inheritDoc
      */
-    function getModel()
+    function getModel(): File
     {
         return new File();
     }

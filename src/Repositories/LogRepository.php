@@ -14,7 +14,7 @@ class LogRepository extends BaseRepository
     protected ?string $orderBy = 'created_at';
     protected bool $orderByAsc = false;
     protected array $sortable_fields = ['created_at', 'model', 'action'];
-    
+
     protected ?array $relationships = [
         'user'
     ];
@@ -33,7 +33,7 @@ class LogRepository extends BaseRepository
     /**
      * @inheritDoc
      */
-    function getModel()
+    function getModel(): Log
     {
         return new Log();
     }

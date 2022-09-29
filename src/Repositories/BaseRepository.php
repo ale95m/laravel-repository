@@ -221,7 +221,7 @@ abstract class BaseRepository
     private function applyFilters(&$query, array $data)
     {
         $filter = Arr::only($data, $this->filters);
-        $filter = array_filter($filter);
+//        $filter = array_filter($filter);
         foreach ($filter as $param => $value) {
             if (isset($filter[$param])) {
                 $param = $this->filters_alias[$param] ?? $param;
@@ -395,7 +395,7 @@ abstract class BaseRepository
         $this->with_totals = $with_totals;
     }
 
-    protected function getTotals(Builder $query)
+    public function getTotals(Builder $query)
     {
         throw new \Exception(trans('easy::exceptions.not_implemented', ['name' => 'getTotals']));
     }

@@ -14,7 +14,7 @@ class FileRepository extends BaseRepository
     /**
      * @inheritDoc
      */
-    function getModel(): File
+    function getModel():File
     {
         return new File();
     }
@@ -22,7 +22,7 @@ class FileRepository extends BaseRepository
     private function save($file, ?string $type, string $directory, bool $is_text = false, bool $base64Encode = false)
     {
         $directory = $this->getBasePath($directory);
-        $file_name = time();
+        $file_name = time(). random_int(1, 99);
         $file_name = $this->getUniqueName($directory, $file_name);
         if ($is_text) {
             Storage::disk($this->getDisk())->append($directory . $file_name, $file);

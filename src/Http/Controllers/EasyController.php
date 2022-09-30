@@ -10,6 +10,9 @@ use Easy\Repositories\LogRepository;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -17,6 +20,8 @@ use Illuminate\Validation\ValidationException;
 
 abstract class EasyController extends \Illuminate\Routing\Controller
 {
+    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+    
     protected $repository;
     protected array $uniqueFields = [];
     protected int $per_page = 20;

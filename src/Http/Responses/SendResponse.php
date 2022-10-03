@@ -45,7 +45,8 @@ class SendResponse
         return response()->json([
             'status' => 'success',
             'message' => $message,
-            'data' => config('easy.json_numeric_check') ? json_encode($data, JSON_NUMERIC_CHECK) : json_encode($data)
+//            'data' => config('easy.json_numeric_check') ? json_encode($data, JSON_NUMERIC_CHECK) : json_encode($data)
+            'data' => $data
         ]);
     }
 

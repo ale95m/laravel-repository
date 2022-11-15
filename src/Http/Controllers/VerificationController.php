@@ -2,7 +2,9 @@
 
 namespace Easy\Http\Controllers;
 
+use Easy\Exceptions\EasyException;
 use Easy\Http\Responses\SendResponse;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use function PHPUnit\Framework\throwException;
 
@@ -13,12 +15,9 @@ class VerificationController extends \Illuminate\Routing\Controller
         if (!$request->hasValidSignature()) {
             throw new \Exception(trans('easy::exceptions.not_found.url'));
         }
-        $user_model = config('easy.user_model');
+        $user_model = config('auth.providers.users.model', 'App\Models\User');
         $user_model = new $user_model();
-        $user = $user_model->find($user);
-        if (is_null($user)) {
-            throw new \Exception(trans('easy::exceptions.not_found.model'));
-        }
+        $user = $user_model->findOrFail($user);
         if (!$user->hasVerifiedEmail()) {
             $user->markEmailAsVerified();
         }
@@ -29,7 +28,7 @@ class VerificationController extends \Illuminate\Routing\Controller
     {
         $user = auth()->user();
         if ($user->hasVerifiedEmail()) {
-            throw new \Exception(trans('easy::messages.email_verify.already_verify'));
+            EasyException::throwException(trans('easy::messages.email_verify.already_verify'));
         }
         $user->sendEmailVerificationNotification();
         return SendResponse::success(trans('easy::messages.email_verify.success'));

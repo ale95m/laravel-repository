@@ -17,14 +17,17 @@ class AuthController extends Controller
 {
     public function login(Request $request): \Illuminate\Http\JsonResponse
     {
-        $user_model = config('easy.user_model');
-        if (!is_subclass_of($user_model,IAuthenticable::class)){
+        $user_model = config('auth.providers.users.model', 'App\Models\User');
+        if (!is_subclass_of($user_model, IAuthenticable::class)) {
             throw new \Exception(trans('easy::exceptions.auth.user_model_is_nut_authenticable', ['model' => $user_model]));
         }
         /** @var User $user */
         $user = new $user_model();
         $password_field = $user->getAuthPasswordField();
         $auth_fields = $user->getAuthField();
+        if (!is_array($auth_field)) {
+            $auth_field = [$this->authField];
+        }
         $current_auth_field = $auth_fields[0];
         foreach ($auth_fields as $auth_field) {
             if (array_key_exists($auth_field, $request->all())) {
@@ -41,7 +44,7 @@ class AuthController extends Controller
             /** @var User $user */
             $user = Auth::user();
             $token = $user->getToken();
-            LogRepository::createLog('login',get_class($user),null,null,$user::class,$user->getKey());
+            LogRepository::createLog('login', get_class($user), null, null, $user::class, $user->getKey());
             return SendResponse::success($token);
         } else {
             return SendResponse::error(trans('easy::messages.auth.invalid_credentials'), 401);
@@ -53,7 +56,7 @@ class AuthController extends Controller
         /** @var User $user */
         $user = $request->user();
         $user->removeToken();
-        LogRepository::createLog('logout',get_class($user),null,null,$user::class,$user->getKey());
+        LogRepository::createLog('logout', get_class($user), null, null, $user::class, $user->getKey());
         return SendResponse::success(trans('easy::messages.auth.logout'));
     }
 

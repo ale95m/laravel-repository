@@ -179,9 +179,10 @@ abstract class EasyController extends \Illuminate\Routing\Controller
     }
 
     /**
-     * @param $query
-     * @param $field
+     * @param Builder $query
+     * @param string $field
      * @param array $data
+     * @param array $datadestr
      * @return Builder
      */
     protected function uniqueConditions($query, $field, array $data)

@@ -109,7 +109,7 @@ class MakeEasyControllerCommand extends EasyCreateCommand
         return [
             'NAMESPACE' => $namespase,
             'CLASS_NAME' => $class_name,
-            'REPOSITORY' => class_basename($repository_name)  ?? '/*TODO: Repository class*/',
+            'REPOSITORY' => $repository_name? class_basename($repository_name) : '/*TODO: Repository class*/',
             'REPOSITORY_USING' => $repository_name ? "$repository_using" : $this->getRepositoriesNamespace(),
             'MODEL_USING' => $model_using,
             'MODEL' => $model_name,

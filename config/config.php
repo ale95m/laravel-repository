@@ -1,18 +1,20 @@
 <?php
 return [
     'use_auth' => true,
-    'user_model' => \Easy\Models\User::class,
     'api_prefix' => 'api',
     'api_middleware' => [],
-    'file_path' => 'files',
-    'disk' => 'local',
-    'use_file_routes' => false,
-    'get_file_middleware' => [],
-    'get_file_prefix' => 'files',
+
     'email_verification' => false,
     'auth_user_relations' => [],
-    'json_numeric_check' => false,
     'restore_password_route' => null,
+
+    'files' => [
+        'path' => 'files',
+        'disk' => 'local',
+        'use_routes' => false,
+        'middlewares' => [],
+        'prefix' => 'files',
+    ],
 
     'pagination' => [
         'input' => [
@@ -26,6 +28,7 @@ return [
             'page_count' => 'pageCount',
         ]
     ],
+
     'query' => [
         'sort_by' => 'sort_by',
         'sort_asc' => 'sort_asc',
@@ -33,6 +36,7 @@ return [
         'with_deleted' => 'with_deleted',
         'searchBy' => 'searchBy',
     ],
+
     'project_directories' => [
         'models' => 'App\\Models',
         'controllers' => 'App\\Http\\Controllers',

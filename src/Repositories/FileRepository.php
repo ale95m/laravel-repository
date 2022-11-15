@@ -7,6 +7,7 @@ use Easy\Exceptions\EasyException;
 use Easy\Models\File;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class FileRepository extends BaseRepository
 {
@@ -22,8 +23,7 @@ class FileRepository extends BaseRepository
     private function save($file, ?string $type, string $directory, bool $is_text = false, bool $base64Encode = false)
     {
         $directory = $this->getBasePath($directory);
-        $file_name = time(). random_int(1, 99);
-        $file_name = $this->getUniqueName($directory, $file_name);
+        $file_name = Str::uuid();
         if ($is_text) {
             Storage::disk($this->getDisk())->append($directory . $file_name, $file);
         } else {
@@ -69,7 +69,7 @@ class FileRepository extends BaseRepository
 
     private function getDisk()
     {
-        return config('easy.disk');
+        return config('easy.files.disk');
     }
 
     private function getBasePath(string $directory)
@@ -77,7 +77,7 @@ class FileRepository extends BaseRepository
         if ($directory != '') {
             $directory .= '/';
         }
-        $base_path = config('easy.file_path');
+        $base_path = config('easy.files.path');
         if ($base_path != '/' & $base_path != '') {
             $base_path .= '/';
         }
@@ -100,13 +100,5 @@ class FileRepository extends BaseRepository
     {
         $data = explode(',', $base64);
         return base64_decode($data[1]);
-    }
-
-    private function getUniqueName(string $store_path, $file_name)
-    {
-        if (file_exists($store_path . $file_name)) {
-            return $this->getUniqueName($store_path, $file_name . random_int(1, 9));
-        }
-        return $file_name;
     }
 }

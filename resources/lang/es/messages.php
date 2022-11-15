@@ -8,6 +8,7 @@ return [
         'invalid_credentials' => 'Credenciales inválidas.',
         'invalid_token' => 'Token inválido.',
         'unauthorized' => 'No está autorizado.',
-        'logout' => 'Sesión cerrada.'
+        'logout' => 'Sesión cerrada.',
+        'login' => 'Sesión iniciada.'
     ]
 ];

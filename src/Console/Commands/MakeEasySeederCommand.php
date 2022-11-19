@@ -80,7 +80,7 @@ class MakeEasySeederCommand extends EasyCreateCommand
                     Artisan::call('easy:repository', ['name' => [$repository_name]], $this->output);
                 }
             } else {
-                if (!is_subclass_of('\\' . $repository, \Easy\Repositories\BaseRepository::class)) {
+                if (!is_subclass_of('\\' . $repository, \Easy\Repositories\EasyRepository::class)) {
                     EasyException::throwException("The class $repository_name isn't subclass of Easy\Repositories\BaseRepository");
                 }
             }

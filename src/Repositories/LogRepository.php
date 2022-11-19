@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 
-class LogRepository extends BaseRepository
+class LogRepository extends EasyRepository
 {
     protected ?string $orderBy = 'created_at';
     protected bool $orderByAsc = false;

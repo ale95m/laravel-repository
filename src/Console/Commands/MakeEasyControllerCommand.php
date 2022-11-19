@@ -86,7 +86,7 @@ class MakeEasyControllerCommand extends EasyCreateCommand
                     $repository_exist = true;
                 }
             } else {
-                if (!is_subclass_of('\\' . $repository_using, \Easy\Repositories\BaseRepository::class)) {
+                if (!is_subclass_of('\\' . $repository_using, \Easy\Repositories\EasyRepository::class)) {
                     EasyException::throwException("The class $repository_name isn't subclass of Easy\Repositories\BaseRepository");
                 }
                 $repository_exist = true;

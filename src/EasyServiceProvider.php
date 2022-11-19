@@ -31,13 +31,13 @@ class EasyServiceProvider extends ServiceProvider
         $this->registerRoutes();
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
         $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'easy');
-        $this->publishes([
-            __DIR__ . '/../resources/lang' => resource_path('lang/vendor/easy'),
-        ]);
         if ($this->app->runningInConsole()) {
             $this->publishes([
+                __DIR__ . '/../resources/lang' => resource_path('lang/vendor/easy'),
+            ], 'easy-translate');
+            $this->publishes([
                 __DIR__ . '/../config/config.php' => config_path('easy.php'),
-            ], 'config');
+            ], 'easy-config');
         }
         if ($this->app->runningInConsole()) {
             $this->commands([
@@ -52,7 +52,7 @@ class EasyServiceProvider extends ServiceProvider
     protected function registerRoutes()
     {
         Route::group($this->routeApiConfiguration(), function () {
-            $this->loadRoutesFrom(__DIR__.'/../routes/api.php');
+            $this->loadRoutesFrom(__DIR__ . '/../routes/api.php');
         });
     }
 

@@ -6,22 +6,30 @@ namespace Easy\Exports;
 
 use Carbon\Carbon;
 use Easy\Helpers\Translate;
+use Easy\Repositories\EasyRepository;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
-class BaseExport
+/**
+ * @property EasyRepository repository
+ */
+class EasyExcelExport
 {
     protected $repository;
-    protected $exportable_fields = [];
-    protected $fields_separator = ', ';
-    protected $split_relation = ':';
-    protected $relation_identifier = '->';
+    protected array $exportable_fields = [];
+    protected string $fields_separator = ', ';
+    protected string $split_relation = ':';
+    protected string $relation_identifier = '->';
+    protected string $default_relation_field = 'name';
 
-    protected $header = 'Export';
-    protected $search_function = 'search';
+    protected string $header = 'Export';
+    protected string $search_function = 'search';
 
-    public function __construct($repository)
+    /**
+     * @param EasyRepository $repository
+     */
+    public function __construct(EasyRepository $repository)
     {
         $this->repository = $repository;
         $this->exportable_fields = collect($this->exportable_fields);
@@ -32,22 +40,22 @@ class BaseExport
         $columns = $this->exportable_fields->mapWithKeys(function ($field, $header) {
             $column = [];
             $column['relation'] = null;
-            if (!is_numeric($header)) {
+            if (is_numeric($header)) {
+                $header = $field;
+                $column['relation'] = null;
+                $column['attribute'] = $field;
+            } else {
                 $check_relation = explode($this->relation_identifier, $field, 2);
                 if (count($check_relation) > 1) {
                     $split_relation = explode($this->split_relation, $check_relation[1], 2);
                     $column['relation'] = $split_relation[0] == '' ? $header : $split_relation[0];
-                    $column['attribute'] = count($split_relation) > 1 ? $split_relation[1] : 'name';
+                    $column['attribute'] = count($split_relation) > 1 ? $split_relation[1] : $this->default_relation_field;
                 } else {
                     $column['relation'] = null;
                     $column['attribute'] = $field;
                 }
-            } else {
-                $header = $field;
-                $column['relation'] = null;
-                $column['attribute'] = $field;
             }
-            $column['mapper'] = 'map' . Str::studly($header);
+            $column['mapper_function'] = 'map' . Str::studly($header);
             return [$header => $column];
         });
 
@@ -65,7 +73,7 @@ class BaseExport
         return (new StatisticExport($export, $password))->download($this->fileName() . '.xlsx');
     }
 
-    protected function getHeader()
+    protected function getHeader(): string
     {
         return $this->header;
     }
@@ -78,28 +86,17 @@ class BaseExport
         });
     }
 
-    protected function fileName()
+    protected function fileName(): string
     {
         return strtolower(class_basename($this->repository->getModel()));
-    }
-
-
-    private function mapExportableFields(Collection $row, array $fields)
-    {
-        foreach ($fields as $field) {
-            $map_function = 'map' . Str::studly($field);
-            if (method_exists(get_called_class(), $map_function)) {
-                $row[$field] = $this->$map_function($row[$field]);
-            }
-        }
     }
 
     private function fillRow(Model $model, Collection $columns)
     {
         $row = [];
         foreach ($columns as $column) {
-            $mapper = $column['mapper'];
-            if (method_exists(get_called_class(), $column['mapper'])) {
+            $mapper = $column['mapper_function'];
+            if (method_exists(get_called_class(), $mapper)) {
                 array_push($row, $this->$mapper($model));
                 continue;
             }
@@ -108,7 +105,6 @@ class BaseExport
             $to_pull = null;
             if (is_null($relation_name)) {
                 $to_pull = $model->$attribute;
-
             } else {
                 $relation = $model->$relation_name;
                 if (!is_null($relation)) {

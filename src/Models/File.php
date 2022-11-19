@@ -23,5 +23,8 @@ class File extends Model
         'is_text'
     ];
 
-
+    public function getTable()
+    {
+        return config('easy.tables.files','easy_files');
+    }
 }

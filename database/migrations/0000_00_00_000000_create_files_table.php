@@ -13,7 +13,7 @@ class CreateFilesTable extends Migration
      */
     public function up()
     {
-        Schema::create('files', function (Blueprint $table) {
+        Schema::create(config('easy.tables.files','easy_files'), function (Blueprint $table) {
             $table->id();
             $table->string('type')->nullable();
             $table->string('path');

@@ -13,7 +13,7 @@ class CreateLogsTable extends Migration
      */
     public function up()
     {
-        Schema::create('logs', function (Blueprint $table) {
+        Schema::create(config('easy.tables.logs','easy_logs'), function (Blueprint $table) {
             $table->id();
             $table->string('action');
             $table->string('model');

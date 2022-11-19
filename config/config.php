@@ -3,6 +3,7 @@ return [
     'use_auth' => true,
     'api_prefix' => 'api',
     'api_middleware' => [],
+    'auth_middleware' => ['auth'],
 
     'email_verification' => false,
     'auth_user_relations' => [],

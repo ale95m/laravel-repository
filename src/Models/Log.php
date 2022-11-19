@@ -8,9 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Log extends Model
 {
     use HasFactory;
-    public $timestamps=false;
 
-    protected $fillable=[
+    public $timestamps = false;
+
+    protected $fillable = [
         'user_id',
         'ip',
         'action',
@@ -31,6 +32,11 @@ class Log extends Model
 
     public function user()
     {
-        return $this->belongsTo(config('easy.user_model'));
+        return $this->belongsTo(config('auth.providers.users.model', 'App\Models\User'));
+    }
+    
+    public function getTable()
+    {
+        return config('easy.tables.logs','easy_logs');
     }
 }

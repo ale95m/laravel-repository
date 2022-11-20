@@ -60,7 +60,7 @@ class AuthController extends Controller
     function logout(Request $request): \Illuminate\Http\JsonResponse
     {
         $user = $request->user();
-        if (!is_subclass_of($user_model, IAuthenticable::class)) {
+        if (!is_subclass_of($user, IAuthenticable::class)) {
             throw new \Exception(trans('easy::exceptions.auth.user_model_is_nut_authenticable', ['model' => $user_model]));
         }
         if (is_subclass_of($user, IAuthenticableOAuth::class)) {
@@ -108,7 +108,7 @@ class AuthController extends Controller
         ]);
 
         $reset_password_status = Password::reset($credentials, function ($user, $password) {
-            if (!is_subclass_of($user_model, IAuthenticable::class)) {
+            if (!is_subclass_of($user, IAuthenticable::class)) {
                 throw new \Exception(trans('easy::exceptions.auth.user_model_is_nut_authenticable', ['model' => $user_model]));
             }
             $password_field = $user->getAuthPasswordField();

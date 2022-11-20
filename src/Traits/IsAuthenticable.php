@@ -8,7 +8,7 @@ namespace Easy\Traits;
  * @property array|string authField
  * @property string authPasswordField
  */
-trait IsAutenticabla
+trait IsAuthenticable
 {
     public function getAuthField(): array|string
     {

@@ -4,17 +4,19 @@
 namespace Easy\Traits;
 
 
+use Easy\Exports\EasyExcelExport;
 use Easy\Http\Requests\ExportExcelRequest;
 
+/**
+ * @property EasyExcelExport excel_export
+ */
 trait ExportableToExcel
 {
-    public $excel_export = null;
-
-    public function getExportableClass():
+    public function getExportableClass(): EasyExcelExport
     {
         return $this->excel_export;
     }
-    
+
     public function exportExcel(ExportExcelRequest $request)
     {
         $export = $this->excel_export ?? null;

@@ -18,6 +18,7 @@ class EasyExcelExport
 {
     protected $repository;
     protected array $exportable_fields = [];
+    protected Collection $exportable_collection;
     protected string $fields_separator = ', ';
     protected string $split_relation = ':';
     protected string $relation_identifier = '->';
@@ -32,12 +33,12 @@ class EasyExcelExport
     public function __construct(EasyRepository $repository)
     {
         $this->repository = $repository;
-        $this->exportable_fields = collect($this->exportable_fields);
+        $this->exportable_collection = collect($this->exportable_fields);
     }
 
     public function getExcel(array $data, ?string $password)
     {
-        $columns = $this->exportable_fields->mapWithKeys(function ($field, $header) {
+        $columns = $this->exportable_collection->mapWithKeys(function ($field, $header) {
             $column = [];
             $column['relation'] = null;
             if (is_numeric($header)) {
@@ -80,7 +81,7 @@ class EasyExcelExport
 
     private function getColumns()
     {
-        return $this->exportable_fields->map(function ($item, $key) {
+        return $this->exportable_collection->map(function ($item, $key) {
             $column_name = is_numeric($key) ? $item : $key;
             return ucfirst(Translate::translateAttribute($column_name));
         });

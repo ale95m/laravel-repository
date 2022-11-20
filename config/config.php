@@ -17,6 +17,11 @@ return [
         'prefix' => 'files',
     ],
 
+    'tables' => [
+        'files' => 'easy_files',
+        'logs' => 'easy_logs',
+    ],
+
     'pagination' => [
         'input' => [
             'items_per_page' => 'itemsPerPage',

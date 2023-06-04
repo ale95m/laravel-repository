@@ -8,6 +8,7 @@ return [
     'email_verification' => false,
     'auth_user_relations' => [],
     'restore_password_route' => null,
+    'json_encode' => false,
 
     'files' => [
         'path' => 'files',
